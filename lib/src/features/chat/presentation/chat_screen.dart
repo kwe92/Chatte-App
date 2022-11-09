@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:chatapp/src/constants/source_of_truth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -26,7 +29,14 @@ class ChatScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.deepPurple[200],
-          onPressed: () {},
+          onPressed: () {
+            // FirebaseFirestore.instance
+            //     .collection('chats/amAflxUTjTvrI261RJYi/messages')
+            //     .snapshots()
+            //     .listen((event) {
+            //   print(event);
+            // });
+          },
           child: const Icon(
             Icons.add,
           ),
