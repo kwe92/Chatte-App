@@ -2,8 +2,8 @@ import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/authentication/presentation/auth_form.dart';
 import 'package:chatapp/src/features/authentication/presentation/auth_screen.dart';
 import 'package:chatapp/src/features/chat/presentation/chat_screen.dart';
-import 'package:chatapp/src/features/create_user/create_form.dart';
-import 'package:chatapp/src/features/create_user/create_user_screem.dart';
+import 'package:chatapp/src/features/create_user/presentation/create_form.dart';
+import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
 
 const _title = 'Flutter CHat';
