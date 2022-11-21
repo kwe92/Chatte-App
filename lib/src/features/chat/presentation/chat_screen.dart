@@ -14,7 +14,7 @@ class ChatScreen extends StatelessWidget {
         ),
         body: StreamBuilder(
           stream: StreamFireStore.getListDocsData(
-              collectionPath: 'chats/amAflxUTjTvrI261RJYi/messages'),
+              collectionPath: '/chats/X7xz4AiJLcNm3JqHOj41/messages'),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator.adaptive();
@@ -31,7 +31,9 @@ class ChatScreen extends StatelessWidget {
               // padding: EdgeInsets.all(10),
               itemCount: snapshot.data?.length,
               itemBuilder: ((context, index) {
-                debugPrint(snapshot.data.toString());
+                debugPrint(
+                  snapshot.data.toString(),
+                );
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
