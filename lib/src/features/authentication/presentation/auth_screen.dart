@@ -4,14 +4,13 @@
 //    - AuthForm
 // nl
 
-import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key, required this.body});
+  const AuthScreen({super.key, required this.body, required this.title});
 
   final Widget body;
-
+  final String title;
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
@@ -21,9 +20,10 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text('Welcome to Flutter Chat!')),
-        backgroundColor: AppColor.backGround2,
-        // Theme.of(context).primaryColor,
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: widget.body,
       ),
     );

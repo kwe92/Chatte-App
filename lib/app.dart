@@ -6,7 +6,7 @@ import 'package:chatapp/src/features/create_user/presentation/create_form.dart';
 import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
 
-const _title = 'Flutter CHat';
+const _title = 'Flutter Chat';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,11 +14,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: AppColor.appBar),
+      theme: ThemeData(
+        primarySwatch: AppColor.appBar,
+        backgroundColor: AppColor.backGround2,
+        // buttonTheme: ButtonTheme.of(context).copyWith(
+        //     shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(0)))
+      ),
       title: _title,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
-        '/': (context) => AuthScreen(body: AuthForm(
+        '/': (context) => AuthScreen(
+            title: _title,
+            body: AuthForm(
               onPressed: () {
                 Navigator.pushNamed(context, '/createuser');
               },

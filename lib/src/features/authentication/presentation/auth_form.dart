@@ -25,6 +25,9 @@ class AuthForm extends StatefulWidget {
 class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController userNameController = TextEditingController();
     return Center(
       child: Card(
         margin: const EdgeInsets.all(12.0),
@@ -36,14 +39,17 @@ class _AuthFormState extends State<AuthForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextFormField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(labelText: 'e-mail'),
                   ),
                   TextFormField(
+                    controller: userNameController,
                     keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(labelText: 'user name'),
+                    decoration: const InputDecoration(labelText: 'username'),
                   ),
                   TextFormField(
+                    controller: passwordController,
                     obscureText: true,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(labelText: 'password'),
@@ -52,8 +58,10 @@ class _AuthFormState extends State<AuthForm> {
                   SizedBox(
                     width: 400,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Login"),
+                      onPressed: () {
+                        debugPrint(userNameController.text);
+                      },
+                      child: const Text('Login'),
                     ),
                   ),
                   // gaph8,
@@ -61,7 +69,7 @@ class _AuthFormState extends State<AuthForm> {
                       onPressed: () {
                         widget.onPressed();
                       },
-                      child: const Text("Create Account."))
+                      child: const Text('Create Account.'))
                 ],
               ),
             ),
