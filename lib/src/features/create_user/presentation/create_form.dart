@@ -11,6 +11,9 @@ class CreateForm extends StatefulWidget {
 class _CreateFormState extends State<CreateForm> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController userNameController = TextEditingController();
     return Center(
       child: Card(
         margin: const EdgeInsets.all(12.0),
@@ -22,14 +25,17 @@ class _CreateFormState extends State<CreateForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   TextFormField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(labelText: 'e-mail'),
                   ),
                   TextFormField(
+                    controller: userNameController,
                     keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(labelText: 'user name'),
+                    decoration: const InputDecoration(labelText: 'username'),
                   ),
                   TextFormField(
+                    controller: passwordController,
                     obscureText: true,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(labelText: 'password'),
