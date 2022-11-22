@@ -42,7 +42,7 @@ class StreamFireStore {
       documentSnapshots.map((listDocSnapshot) =>
           listDocSnapshot.map((doc) => doc.data()).toList());
 
-  /// Returns a [List] of [Map]<String,dynamic> to the user
+  /// Returns all documents of a given collection as a [List] of [Map]'s
   static Stream<List<Map<String, dynamic>>> getListDocsData(
           {required String collectionPath}) =>
       StreamFireStore._returnListDocsData(
