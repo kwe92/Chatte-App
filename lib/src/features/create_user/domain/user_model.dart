@@ -1,13 +1,21 @@
-class User {
-  const User(
-      {required this.id,
-      required this.email,
-      required this.userName,
-      required this.password});
+class UserModel {
+  const UserModel({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.userName,
+  });
   final String id;
   final String password;
   final String email;
   final String userName;
+
+  Map<String, Object> toJSON() => {
+        'id': id,
+        'username': userName,
+        'password': password,
+        'email': email,
+      };
 
   @override
   String toString() {
@@ -18,7 +26,7 @@ class User {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is User &&
+    return other is UserModel &&
         other.id == id &&
         other.password == password &&
         other.email == email &&
