@@ -28,7 +28,10 @@ class FormFields extends StatelessWidget {
                 if (value.isEmpty ||
                     !value.contains('@') ||
                     value.contains(' ')) {
-                  return 'Email can not be empty or contain spaces and must contain @.';
+                  return """
+Email can not be empty
+or contain spaces 
+and must contain @.""";
                 }
                 return null;
               }
