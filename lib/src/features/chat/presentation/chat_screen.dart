@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ChatScreen extends StatelessWidget {
   const ChatScreen({required this.title, super.key});
   final String title;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
