@@ -3,7 +3,7 @@
 //  - Scaffold: background color theme primary color
 //    - AuthForm
 // nl
-
+//TODO: Change animation upon navigation to a diffrent screen, right now it fades in kinda ugly
 import 'package:chatapp/src/widgets/field_scaffold.dart';
 import 'package:flutter/material.dart';
 
