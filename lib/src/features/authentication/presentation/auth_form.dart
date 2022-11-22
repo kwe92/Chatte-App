@@ -12,6 +12,9 @@
 // nl
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
+import 'package:chatapp/src/utils/validator.dart';
+import 'package:chatapp/src/widgets/form_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
@@ -23,6 +26,14 @@ class AuthForm extends StatefulWidget {
 }
 
 class _AuthFormState extends State<AuthForm> {
+  // ignore: todo
+  //TODO: Research Global Keys
+  // GlobalKey in this case is used to access the current state and call FormState.validate()
+  final _formKey = GlobalKey<FormState>();
+  bool _userNotFound = false;
+  //   //TODO: Need to read up on FocusScope and this whole line of code
+  // FocusScope.of(context).unfocus();
+
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
@@ -35,31 +46,48 @@ class _AuthFormState extends State<AuthForm> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Form(
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(labelText: 'e-mail'),
-                  ),
-                  TextFormField(
-                    controller: userNameController,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(labelText: 'username'),
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(labelText: 'password'),
-                  ),
+                  _userNotFound
+                      ? const Text(
+                          'Wrong username or password',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : const SizedBox(),
+                  FormFields(
+                      userNameController: userNameController,
+                      passwordController: passwordController,
+                      emailController: emailController),
                   gaph16,
                   SizedBox(
                     width: 400,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final bool valid = Validator.trySubmit(_formKey);
+                        if (valid) {
+                          try {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text);
+                            // Reset email and password
+                            setState(() {
+                              _userNotFound = false;
+                            });
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushNamed(context, '/chatscreen');
+                          } catch (e) {
+                            debugPrint(e.toString());
+                            setState(() {
+                              _userNotFound = true;
+                            });
+                          }
+                        }
                         debugPrint(userNameController.text);
+                        debugPrint(emailController.text);
+                        debugPrint(passwordController.text);
                       },
                       child: const Text('Login'),
                     ),
@@ -69,7 +97,7 @@ class _AuthFormState extends State<AuthForm> {
                       onPressed: () {
                         widget.onPressed();
                       },
-                      child: const Text('Create Account.'))
+                      child: const Text('Create Account'))
                 ],
               ),
             ),

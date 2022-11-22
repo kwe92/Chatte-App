@@ -4,6 +4,7 @@
 //    - AuthForm
 // nl
 
+import 'package:chatapp/src/widgets/field_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -11,6 +12,7 @@ class AuthScreen extends StatefulWidget {
 
   final Widget body;
   final String title;
+
   @override
   State<AuthScreen> createState() => _AuthScreenState();
 }
@@ -18,14 +20,10 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: widget.body,
-      ),
+    return FieldScaffold(
+      body: widget.body,
+      title: widget.title,
+      bgColor: Theme.of(context).backgroundColor,
     );
   }
 }
