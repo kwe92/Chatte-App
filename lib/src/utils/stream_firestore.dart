@@ -11,6 +11,12 @@ class StreamFireStore {
           {required FirebaseFirestore firestore,
           required String collectionPath}) =>
       firestore.collection(collectionPath);
+//TODO: Maybe shorten the implementation a bit an need to make descending optional
+  static Query<Map<String, dynamic>> _returnCollectionOrdered(
+          {required CollectionReference<Map<String, dynamic>> collectionRef,
+          required String orderBy,
+          bool descending = true}) =>
+      collectionRef.orderBy(orderBy, descending: descending);
 
   /// Takes a [CollectionReference] to the currently configured [FirebaseFirestore]
   /// Returns a [QuerySnapshot]
@@ -18,8 +24,13 @@ class StreamFireStore {
   /// It can contain zero or more [DocumentSnapshot] objects
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> _returnCollectionSnapshot(
-          {required CollectionReference<Map<String, dynamic>> collectionRef}) =>
-      collectionRef.snapshots();
+          {required CollectionReference<Map<String, dynamic>> collectionRef,
+          String? orderBy}) =>
+      orderBy == null
+          ? collectionRef.snapshots()
+          : _returnCollectionOrdered(
+                  collectionRef: collectionRef, orderBy: orderBy)
+              .snapshots();
 
   /// Takes a [QuerySnapshot] as an argument
   /// Returns a [List] of all [QueryDocumentSnapshot] objects
@@ -44,14 +55,14 @@ class StreamFireStore {
 
   /// Returns all documents of a given collection as a [List] of [Map]'s
   static Stream<List<Map<String, dynamic>>> getListDocsData(
-          {required String collectionPath}) =>
+          {required String collectionPath, String? orderBy}) =>
       StreamFireStore._returnListDocsData(
         documentSnapshots: _returnListDocsSnapshot(
           snapshot: _returnCollectionSnapshot(
-            collectionRef: _returnCollection(
-                firestore: StreamFireStore._firebaseFirestore,
-                collectionPath: collectionPath),
-          ),
+              collectionRef: _returnCollection(
+                  firestore: StreamFireStore._firebaseFirestore,
+                  collectionPath: collectionPath),
+              orderBy: orderBy),
         ),
       );
 }
