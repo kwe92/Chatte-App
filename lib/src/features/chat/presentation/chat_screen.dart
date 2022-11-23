@@ -8,6 +8,7 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: also pass this to messages and determine if the message belongs to the currently logged in user
     final String usrID = ModalRoute.of(context)!.settings.arguments.toString();
     return SafeArea(
       child: Scaffold(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//TODO: Add UserName to the MessageModel to display to the chatscreen
 class MessageModel {
   const MessageModel(
       {required this.userID, required this.textID, required this.text});
@@ -36,4 +37,8 @@ class MessageModel {
 
   @override
   int get hashCode => textID.hashCode ^ text.hashCode;
+
+  @override
+  String toString() =>
+      'MessageModel(userID: $userID, textID: $textID, text: $text)';
 }

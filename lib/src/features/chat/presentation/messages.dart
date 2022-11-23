@@ -1,4 +1,6 @@
 import 'package:chatapp/src/constants/source_of_truth.dart';
+import 'package:chatapp/src/features/chat/domain/message_model.dart';
+import 'package:chatapp/src/features/chat/presentation/chat_bubble.dart';
 import 'package:chatapp/src/utils/stream_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +25,13 @@ class Messages extends StatelessWidget {
           );
         }
         final List<Map<String, dynamic>> msgs = snapshot.data!;
+
+        // ignore: todo
+        //TODO: Implement dynamic list of MessageModel's properly
+        // final List<MessageModel> msgModels = [
+        //   for (var msg in snapshot.data!) MessageModel.fromJSON(msg)
+        // ];
+
         return ListView.builder(
           reverse: true,
           // padding: EdgeInsets.all(10),
@@ -32,25 +41,11 @@ class Messages extends StatelessWidget {
               snapshot.data.toString(),
             );
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 110,
-                decoration: BoxDecoration(color: AppColor.main),
-                child: Center(
-                  //TODO: Turn this into a text tile with text top, user name bottom and picture as an icon
-                  child: Column(
-                    children: [
-                      Text(
-                        msgs[index]['text'].toString(),
-                        style: const TextStyle(
-                            fontSize: 18.0, color: Colors.white),
-                      ),
-                      Text(msgs[index]['userid'].toString())
-                    ],
-                  ),
-                ),
-              ),
-            );
+                padding: const EdgeInsets.all(8.0),
+                child: ChatBubble(
+                  userID: msgs[index]['userid'].toString(),
+                  text: msgs[index]['text'].toString(),
+                ));
           }),
         );
       }),

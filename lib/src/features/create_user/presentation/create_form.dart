@@ -46,7 +46,7 @@ class _CreateFormState extends State<CreateForm> {
     return Center(
       //TODO: Move the card into its own module
       child: _isLoading
-          ? CircularProgressIndicator.adaptive()
+          ? const CircularProgressIndicator.adaptive()
           : Card(
               margin: const EdgeInsets.all(12.0),
               child: SingleChildScrollView(
