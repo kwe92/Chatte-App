@@ -19,7 +19,7 @@ Future<void> _createUser(
     {required TextEditingController userNameController,
     required TextEditingController passwordController,
     required TextEditingController emailController,
-    required CollectionReference<Map<String, dynamic>> docRef}) async {
+    required CollectionReference<Map<String, dynamic>> colRef}) async {
   final userCredentials = await FirebaseAuth.instance
       .createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
@@ -29,7 +29,7 @@ Future<void> _createUser(
       password: passwordController.text,
       email: emailController.text);
   final json = user.toJSON();
-  await docRef.doc(user.id).set(json);
+  await colRef.doc(user.id).set(json);
 }
 
 class _CreateFormState extends State<CreateForm> {
@@ -60,7 +60,7 @@ class _CreateFormState extends State<CreateForm> {
                         _userExists
                             ? Text(
                                 _errMsg,
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               )
                             : const SizedBox(),
                         FormFields(
@@ -76,7 +76,7 @@ class _CreateFormState extends State<CreateForm> {
                             onPressed: () async {
                               final valid = Validator.trySubmit(_formKey);
                               if (valid) {
-                                final docRef = FirebaseFirestore.instance
+                                final colRef = FirebaseFirestore.instance
                                     .collection('users');
                                 try {
                                   setState(() {
@@ -86,7 +86,7 @@ class _CreateFormState extends State<CreateForm> {
                                       userNameController: userNameController,
                                       passwordController: passwordController,
                                       emailController: emailController,
-                                      docRef: docRef);
+                                      colRef: colRef);
                                   // ignore: use_build_context_synchronously
                                   Navigator.pushReplacementNamed(context, '/');
                                 } catch (e) {
