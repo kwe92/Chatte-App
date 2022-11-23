@@ -76,8 +76,11 @@ class _AuthFormState extends State<AuthForm> {
                             setState(() {
                               _userNotFound = false;
                             });
+                            final String usrID =
+                                FirebaseAuth.instance.currentUser!.uid;
                             // ignore: use_build_context_synchronously
-                            Navigator.pushNamed(context, '/chatscreen');
+                            Navigator.pushNamed(context, '/chatscreen',
+                                arguments: {'userid': usrID});
                           } catch (e) {
                             debugPrint(e.toString());
                             setState(() {
