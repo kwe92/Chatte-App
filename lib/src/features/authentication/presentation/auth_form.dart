@@ -12,8 +12,10 @@
 // nl
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
+import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +26,10 @@ class AuthForm extends StatefulWidget {
   @override
   State<AuthForm> createState() => _AuthFormState();
 }
+
+Future<DocumentSnapshot<Map<String, dynamic>>> _getUser(
+        {required collection, required userid}) async =>
+    await FirebaseFirestore.instance.collection(collection).doc(userid).get();
 
 class _AuthFormState extends State<AuthForm> {
   // ignore: todo
@@ -76,11 +82,17 @@ class _AuthFormState extends State<AuthForm> {
                             setState(() {
                               _userNotFound = false;
                             });
-                            final String usrID =
+                            final String userid =
                                 FirebaseAuth.instance.currentUser!.uid;
+                            final docSnapshot = await _getUser(
+                                collection: 'users', userid: userid);
+                            final currentUser =
+                                UserModel.fromJSON(docSnapshot.data());
+                            print("USER NAME: ${currentUser.userName}");
+
                             // ignore: use_build_context_synchronously
                             Navigator.pushNamed(context, '/chatscreen',
-                                arguments: {'userid': usrID});
+                                arguments: {'currentuser': currentUser});
                           } catch (e) {
                             debugPrint(e.toString());
                             setState(() {
