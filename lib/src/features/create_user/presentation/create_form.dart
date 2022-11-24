@@ -2,6 +2,7 @@
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
+import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,65 +53,73 @@ class _CreateFormState extends State<CreateForm> {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        _userExists
-                            ? Text(
-                                _errMsg,
-                                style: const TextStyle(color: Colors.red),
-                              )
-                            : const SizedBox(),
-                        FormFields(
-                          userNameController: userNameController,
-                          passwordController: passwordController,
-                          emailController: emailController,
-                          isLogin: true,
-                        ),
-                        gaph16,
-                        SizedBox(
-                          width: 400,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              final valid = Validator.trySubmit(_formKey);
-                              if (valid) {
-                                final colRef = FirebaseFirestore.instance
-                                    .collection('users');
-                                try {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await _createUser(
-                                      userNameController: userNameController,
-                                      passwordController: passwordController,
-                                      emailController: emailController,
-                                      colRef: colRef);
-                                  // ignore: use_build_context_synchronously
+                  child: Column(
+                    children: [
+                      const UserImagePicker(),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            _userExists
+                                ? Text(
+                                    _errMsg,
+                                    style: const TextStyle(color: Colors.red),
+                                  )
+                                : const SizedBox(),
+                            FormFields(
+                              userNameController: userNameController,
+                              passwordController: passwordController,
+                              emailController: emailController,
+                              isLogin: true,
+                            ),
+                            gaph16,
+                            SizedBox(
+                              width: 400,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  final valid = Validator.trySubmit(_formKey);
+                                  if (valid) {
+                                    final colRef = FirebaseFirestore.instance
+                                        .collection('users');
+                                    try {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+                                      await _createUser(
+                                          userNameController:
+                                              userNameController,
+                                          passwordController:
+                                              passwordController,
+                                          emailController: emailController,
+                                          colRef: colRef);
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pushReplacementNamed(
+                                          context, '/');
+                                    } catch (e) {
+                                      setState(() {
+                                        _userExists = true;
+                                        _errMsg = e.toString();
+                                        _isLoading = false;
+                                      });
+                                      debugPrint(e.toString());
+                                    }
+                                  } else {
+                                    return;
+                                  }
+                                },
+                                child: const Text('Submit'),
+                              ),
+                            ),
+                            TextButton(
+                                onPressed: () {
                                   Navigator.pushReplacementNamed(context, '/');
-                                } catch (e) {
-                                  setState(() {
-                                    _userExists = true;
-                                    _errMsg = e.toString();
-                                    _isLoading = false;
-                                  });
-                                  debugPrint(e.toString());
-                                }
-                              } else {
-                                return;
-                              }
-                            },
-                            child: const Text('Submit'),
-                          ),
+                                },
+                                child: const Text('I already have an account'))
+                          ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/');
-                            },
-                            child: const Text('I already have an account'))
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

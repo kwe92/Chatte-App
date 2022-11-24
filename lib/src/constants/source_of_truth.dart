@@ -10,6 +10,10 @@ class AppColor {
   // static final main = Colors.deepPurple[200];
 }
 
+const gaph4 = SizedBox(
+  height: 4.0,
+);
+
 const gaph8 = SizedBox(
   height: 8.0,
 );

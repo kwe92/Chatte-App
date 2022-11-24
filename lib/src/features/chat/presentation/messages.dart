@@ -45,10 +45,9 @@ class Messages extends StatelessWidget {
             return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ChatBubble(
-                  currentUser: user, message: msgModels[index],
-                  // username: msgs[index]['username'].toString(),
-                  // text:
-                  // msgs[index]['text'].toString(),
+                  currentUser: user,
+                  message: msgModels[index],
+                  key: ValueKey(msgModels[index].textID),
                 ));
           }),
         );

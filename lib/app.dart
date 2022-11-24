@@ -6,7 +6,7 @@ import 'package:chatapp/src/features/create_user/presentation/create_form.dart';
 import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
 
-const _title = 'Flutter Chat';
+const _title = 'Convertir';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

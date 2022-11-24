@@ -21,7 +21,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget build(BuildContext context) {
     return FieldScaffold(
       body: widget.body,
-      title: 'Flutter Chat: Sign Up',
+      title: 'Convertir: Sign Up',
       bgColor: Theme.of(context).backgroundColor,
     );
   }

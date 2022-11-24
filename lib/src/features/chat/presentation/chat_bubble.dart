@@ -12,6 +12,13 @@ class ChatBubble extends StatelessWidget {
   final UserModel currentUser;
   final MessageModel message;
 
+  TextStyle _style(
+          {double fontSize = 18.0, FontWeight? weight = FontWeight.bold}) =>
+      currentUser.id == message.userID
+          ? TextStyle(
+              fontSize: fontSize, color: Colors.black, fontWeight: weight)
+          : TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: weight);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -25,18 +32,17 @@ class ChatBubble extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
             color: currentUser.id == message.userID
-                ? Colors.grey
+                ? Colors.grey[500]
                 : Theme.of(context).primaryColor,
           ),
           child: Column(
             children: [
+              Text(message.userName, style: _style(fontSize: 16)),
               Text(
                 // msgModels[index].text,
                 message.text,
-                style: const TextStyle(fontSize: 18.0, color: Colors.white),
-              ),
-              Text(message.userName,
-                  style: const TextStyle(fontSize: 8.0, color: Colors.white))
+                style: _style(weight: null),
+              )
             ],
           ),
         ),
