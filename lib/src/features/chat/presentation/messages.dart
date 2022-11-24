@@ -1,11 +1,13 @@
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/chat/domain/message_model.dart';
 import 'package:chatapp/src/features/chat/presentation/chat_bubble.dart';
+import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:chatapp/src/utils/stream_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Messages extends StatelessWidget {
-  const Messages({super.key});
+  const Messages({required this.user, super.key});
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,9 @@ class Messages extends StatelessWidget {
 
         // ignore: todo
         //TODO: Implement dynamic list of MessageModel's properly
-        // final List<MessageModel> msgModels = [
-        //   for (var msg in snapshot.data!) MessageModel.fromJSON(msg)
-        // ];
+        final List<MessageModel> msgModels = [
+          for (var msg in snapshot.data!) MessageModel.fromJSON(msg)
+        ];
 
         return ListView.builder(
           reverse: true,
@@ -43,8 +45,10 @@ class Messages extends StatelessWidget {
             return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ChatBubble(
-                  userID: msgs[index]['userid'].toString(),
-                  text: msgs[index]['text'].toString(),
+                  currentUser: user, message: msgModels[index],
+                  // username: msgs[index]['username'].toString(),
+                  // text:
+                  // msgs[index]['text'].toString(),
                 ));
           }),
         );

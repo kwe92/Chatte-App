@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         //         borderRadius: BorderRadius.circular(0)))
       ),
       title: _title,
-      initialRoute: '/chatscreen',
+      initialRoute: '/',
+      //  '/chatscreen',
       routes: <String, WidgetBuilder>{
         '/': (context) => AuthScreen(
             title: _title,
