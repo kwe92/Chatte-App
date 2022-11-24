@@ -10,6 +10,12 @@ class UserModel {
   final String email;
   final String userName;
 
+  factory UserModel.fromJSON(Map<String, Object?>? json) => UserModel(
+      id: json!['id'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      userName: json['username'] as String);
+
   Map<String, Object> toJSON() => {
         'id': id,
         'username': userName,
