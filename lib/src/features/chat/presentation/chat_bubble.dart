@@ -1,3 +1,5 @@
+import 'package:chatapp/src/features/chat/domain/message_model.dart';
+import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:flutter/material.dart';
 
 //TODO: TextTile bubble? with a container?
@@ -5,28 +7,35 @@ import 'package:flutter/material.dart';
 //TODO: Show the current user and maybe a filler circular avatar for the user picture
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({required this.text, required this.userID, super.key});
-  final String text;
-  final String userID;
+  const ChatBubble(
+      {required this.currentUser, required this.message, super.key});
+  final UserModel currentUser;
+  final MessageModel message;
+
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: currentUser.id == message.userID
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(16),
           width: 160,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: Theme.of(context).primaryColor,
+            color: currentUser.id == message.userID
+                ? Colors.grey
+                : Theme.of(context).primaryColor,
           ),
           child: Column(
             children: [
               Text(
                 // msgModels[index].text,
-                text,
+                message.text,
                 style: const TextStyle(fontSize: 18.0, color: Colors.white),
               ),
-              Text(userID,
+              Text(message.userName,
                   style: const TextStyle(fontSize: 8.0, color: Colors.white))
             ],
           ),
