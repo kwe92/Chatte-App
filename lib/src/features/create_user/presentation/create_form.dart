@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
+import 'dart:io';
+
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
@@ -37,7 +39,13 @@ class _CreateFormState extends State<CreateForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _userExists = false;
+  File? _pickedImage;
   String _errMsg = '';
+
+  set pickedImage(File pickedimage) => setState(() {
+        _pickedImage = pickedimage;
+      });
+
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
@@ -55,7 +63,12 @@ class _CreateFormState extends State<CreateForm> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
-                      const UserImagePicker(),
+                      UserImagePicker(
+                        callback: (image) => setState(() {
+                          _pickedImage = image;
+                          print('IMEAGE SENT TO FORM: ${image.toString()}');
+                        }),
+                      ),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -76,6 +89,7 @@ class _CreateFormState extends State<CreateForm> {
                             gaph16,
                             SizedBox(
                               width: 400,
+                              //TODO: This button needs to be its own module
                               child: ElevatedButton(
                                 onPressed: () async {
                                   final valid = Validator.trySubmit(_formKey);
