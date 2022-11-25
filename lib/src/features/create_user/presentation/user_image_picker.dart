@@ -6,8 +6,13 @@ import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
 
+//TODO: Review call backs and why this works
+typedef void ImageFileCallback(File? imageFile);
+
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({super.key});
+  const UserImagePicker({required this.callback, super.key});
+
+  final ImageFileCallback callback;
 
   @override
   State<UserImagePicker> createState() => _UserImagePickerState();
@@ -20,22 +25,28 @@ class _UserImagePickerState extends State<UserImagePicker> {
     return File(pickedImageFile!.path);
   }
 
+  File? pickedImage;
+
   @override
   Widget build(BuildContext context) {
-    File? pickedImage;
     return Column(
       children: [
         CircleAvatar(
           radius: 40,
-          backgroundImage: pickedImage == null ? null : FileImage(pickedImage),
+          backgroundImage: pickedImage == null ? null : FileImage(pickedImage!),
         ),
         gaph4,
         TextButton.icon(
           onPressed: () async {
-            pickedImage = await _imagePicker();
+            final File? result = await _imagePicker();
+            print('IMGAGE: ${result.toString()}');
+            setState(() {
+              pickedImage = result;
+            });
+            widget.callback(result);
           },
           icon: const Icon(Icons.image),
-          label: const Text('Add an image.'),
+          label: const Text('Add an image'),
         )
       ],
     );
