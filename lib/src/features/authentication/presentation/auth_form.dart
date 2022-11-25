@@ -71,6 +71,9 @@ class _AuthFormState extends State<AuthForm> {
                   gaph16,
                   SizedBox(
                     width: 400,
+
+                    // Log in Button
+                    //TODO: The log in button needs to be its own module | Narrow Interface | Law of Demeter | Dry Code | Modular Code
                     child: ElevatedButton(
                       onPressed: () async {
                         final bool valid = Validator.trySubmit(_formKey);
@@ -90,10 +93,11 @@ class _AuthFormState extends State<AuthForm> {
                                 collection: 'users', userid: userid);
                             final currentUser =
                                 UserModel.fromJSON(docSnapshot.data());
-                            print("USER NAME: ${currentUser.userName}");
+                            // print("USER NAME: ${currentUser.userName}");
 
                             // ignore: use_build_context_synchronously
-                            Navigator.pushNamed(context, '/chatscreen',
+                            Navigator.pushReplacementNamed(
+                                context, '/chatscreen',
                                 arguments: {'currentuser': currentUser});
                           } catch (e) {
                             debugPrint(e.toString());
@@ -102,9 +106,9 @@ class _AuthFormState extends State<AuthForm> {
                             });
                           }
                         }
-                        debugPrint(userNameController.text);
-                        debugPrint(emailController.text);
-                        debugPrint(passwordController.text);
+                        // debugPrint(userNameController.text);
+                        // debugPrint(emailController.text);
+                        // debugPrint(passwordController.text);
                       },
                       child: const Text('Login'),
                     ),

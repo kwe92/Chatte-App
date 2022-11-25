@@ -1,4 +1,3 @@
 # Convertir App
 
-A Chat App built with Flutter Using A Firebase Backend
-
+A chat app built with Flutter using a Firebase backend.

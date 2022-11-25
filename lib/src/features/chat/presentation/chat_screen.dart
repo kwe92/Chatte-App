@@ -19,6 +19,21 @@ class ChatScreen extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(
             title: const Text('Convertir'),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/');
+                  },
+                  icon: const Icon(Icons.menu),
+                  label: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              )
+            ],
           ),
           body: Container(
             child: Column(children: <Widget>[
