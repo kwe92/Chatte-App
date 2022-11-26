@@ -9,6 +9,7 @@ import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class CreateForm extends StatefulWidget {
@@ -22,6 +23,7 @@ Future<void> _createUser(
     {required TextEditingController userNameController,
     required TextEditingController passwordController,
     required TextEditingController emailController,
+    required File? file,
     required CollectionReference<Map<String, dynamic>> colRef}) async {
   final userCredentials = await FirebaseAuth.instance
       .createUserWithEmailAndPassword(
@@ -33,6 +35,11 @@ Future<void> _createUser(
       email: emailController.text);
   final json = user.toJSON();
   await colRef.doc(user.id).set(json);
+  final storageRef = FirebaseStorage.instance
+      .ref()
+      .child('user_images')
+      .child('${user.id}.jpg');
+  await storageRef.putFile(file!);
 }
 
 class _CreateFormState extends State<CreateForm> {
@@ -42,8 +49,9 @@ class _CreateFormState extends State<CreateForm> {
   File? _pickedImage;
   String _errMsg = '';
 
-  set pickedImage(File pickedimage) => setState(() {
+  void pickedImage(File? pickedimage) => setState(() {
         _pickedImage = pickedimage;
+        print('IMEAGE SENT TO FORM: ${pickedimage.toString()}');
       });
 
   @override
@@ -63,12 +71,12 @@ class _CreateFormState extends State<CreateForm> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
-                      UserImagePicker(
-                        callback: (image) => setState(() {
-                          _pickedImage = image;
-                          print('IMEAGE SENT TO FORM: ${image.toString()}');
-                        }),
-                      ),
+                      UserImagePicker(callback: pickedImage
+                          // (image) => setState(() {
+                          //   _pickedImage = image;
+                          //   print('IMEAGE SENT TO FORM: ${image.toString()}');
+                          // }),
+                          ),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -106,7 +114,9 @@ class _CreateFormState extends State<CreateForm> {
                                           passwordController:
                                               passwordController,
                                           emailController: emailController,
+                                          file: _pickedImage,
                                           colRef: colRef);
+
                                       // ignore: use_build_context_synchronously
                                       Navigator.pushReplacementNamed(
                                           context, '/');
