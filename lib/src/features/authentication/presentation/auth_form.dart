@@ -12,6 +12,7 @@
 // nl
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
+import 'package:chatapp/src/features/authentication/login_button.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
@@ -22,25 +23,26 @@ import 'package:flutter/material.dart';
 //TODO: Add image Picker functionality
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({super.key, required this.onPressed});
+  const AuthForm({required this.onPressed, super.key});
   final void Function() onPressed;
 
   @override
   State<AuthForm> createState() => _AuthFormState();
 }
 
+// retrieves all users
 Future<DocumentSnapshot<Map<String, dynamic>>> _getUser(
         {required collection, required userid}) async =>
     await FirebaseFirestore.instance.collection(collection).doc(userid).get();
 
 class _AuthFormState extends State<AuthForm> {
-  // ignore: todo
-  //TODO: Research Global Keys
-  // GlobalKey in this case is used to access the current state and call FormState.validate()
   final _formKey = GlobalKey<FormState>();
   bool _userNotFound = false;
-  //   //TODO: Need to read up on FocusScope and this whole line of code
   // FocusScope.of(context).unfocus();
+
+  void _isValid(bool valid) => setState(() {
+        _userNotFound = valid;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -71,47 +73,12 @@ class _AuthFormState extends State<AuthForm> {
                   gaph16,
                   SizedBox(
                     width: 400,
-
-                    // Log in Button
-                    //TODO: The log in button needs to be its own module | Narrow Interface | Law of Demeter | Dry Code | Modular Code
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final bool valid = Validator.trySubmit(_formKey);
-                        if (valid) {
-                          try {
-                            await FirebaseAuth.instance
-                                .signInWithEmailAndPassword(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                            // Reset email and password
-                            setState(() {
-                              _userNotFound = false;
-                            });
-                            final String userid =
-                                FirebaseAuth.instance.currentUser!.uid;
-                            final docSnapshot = await _getUser(
-                                collection: 'users', userid: userid);
-                            final currentUser =
-                                UserModel.fromJSON(docSnapshot.data());
-                            // print("USER NAME: ${currentUser.userName}");
-
-                            // ignore: use_build_context_synchronously
-                            Navigator.pushReplacementNamed(
-                                context, '/chatscreen',
-                                arguments: {'currentuser': currentUser});
-                          } catch (e) {
-                            debugPrint(e.toString());
-                            setState(() {
-                              _userNotFound = true;
-                            });
-                          }
-                        }
-                        // debugPrint(userNameController.text);
-                        // debugPrint(emailController.text);
-                        // debugPrint(passwordController.text);
-                      },
-                      child: const Text('Login'),
-                    ),
+                    // Login Button
+                    child: LoginButton(
+                        formKey: _formKey,
+                        emailController: emailController,
+                        passwordController: passwordController,
+                        callback: _isValid),
                   ),
                   // gaph8,
                   TextButton(
