@@ -5,19 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SendMessage extends StatefulWidget {
-  const SendMessage({required this.userID, required this.userName, super.key});
-  final String userID;
-  final String userName;
+  const SendMessage({required this.userid, required this.username, super.key});
+  final String userid;
+  final String username;
 
   @override
   State<SendMessage> createState() => _SendMessageState();
 }
 
-void _sendMessage(String userID, String userName, String text,
+void _sendMessage(String userid, String username, String text,
     CollectionReference<Map<String, dynamic>> colRef) {
   final textID = colRef.doc().id;
   MessageModel newMessage = MessageModel(
-      userID: userID, userName: userName, textID: textID, text: text);
+      userid: userid, username: username, textID: textID, text: text);
   colRef.doc(textID).set(newMessage.toJSON());
 }
 
@@ -56,7 +56,7 @@ class _SendMessageState extends State<SendMessage> {
               final colRef = FirebaseFirestore.instance
                   .collection('/chat/3Rzps9JekqBlFfihf2Jq/messages');
               final newMsg = messageController.text;
-              _sendMessage(widget.userID, widget.userName, newMsg, colRef);
+              _sendMessage(widget.userid, widget.username, newMsg, colRef);
               // debugPrint(newMsg);
               messageController.clear();
             }

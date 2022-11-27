@@ -1,3 +1,4 @@
+import 'package:chatapp/src/features/chat/presentation/logout_button.dart';
 import 'package:chatapp/src/features/chat/presentation/messages.dart';
 import 'package:chatapp/src/features/chat/presentation/send_message_field.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
@@ -12,41 +13,26 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: also pass this to messages and determine if the message belongs to the currently logged in user
+    // current user passed from the auth screen
     final authInfo = ModalRoute.of(context)!.settings.arguments as Map;
     final UserModel currentUser = authInfo['currentuser'] as UserModel;
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Convertir'),
-            actions: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/');
-                  },
-                  icon: const Icon(Icons.menu),
-                  label: const Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-            ],
-          ),
-          body: Container(
-            child: Column(children: <Widget>[
-              Expanded(
-                  child: Messages(
-                user: currentUser,
-              )),
-              SendMessage(
-                userName: currentUser.userName,
-                userID: currentUser.id,
-              )
-            ]),
+        appBar: AppBar(
+          title: const Text('Convertir'),
+          actions: logoutButton(context: context),
+        ),
+        body: Column(children: <Widget>[
+          Expanded(
+              child: Messages(
+            user: currentUser,
           )),
+          SendMessage(
+            username: currentUser.username,
+            userid: currentUser.id,
+          )
+        ]),
+      ),
     );
   }
 }
