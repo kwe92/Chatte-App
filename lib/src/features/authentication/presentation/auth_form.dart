@@ -12,7 +12,7 @@
 // nl
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:chatapp/src/features/authentication/login_button.dart';
+import 'package:chatapp/src/features/authentication/presentation/login_button.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
@@ -38,10 +38,16 @@ Future<DocumentSnapshot<Map<String, dynamic>>> _getUser(
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
   bool _userNotFound = false;
+  bool _userFound = false;
   // FocusScope.of(context).unfocus();
 
+// callback to handle user not found
   void _isValid(bool valid) => setState(() {
         _userNotFound = valid;
+      });
+
+  void _successfulLogin(bool successful) => setState(() {
+        _userFound = successful;
       });
 
   @override
@@ -50,48 +56,47 @@ class _AuthFormState extends State<AuthForm> {
     TextEditingController passwordController = TextEditingController();
     TextEditingController userNameController = TextEditingController();
     return Center(
-      child: Card(
-        margin: const EdgeInsets.all(12.0),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _userNotFound
-                      ? const Text(
-                          'Wrong username or password',
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : const SizedBox(),
-                  FormFields(
-                      userNameController: userNameController,
-                      passwordController: passwordController,
-                      emailController: emailController),
-                  gaph16,
-                  SizedBox(
-                    width: 400,
-                    // Login Button
-                    child: LoginButton(
-                        formKey: _formKey,
-                        emailController: emailController,
-                        passwordController: passwordController,
-                        callback: _isValid),
+      child: _userFound
+          ? const CircularProgressIndicator.adaptive()
+          : Card(
+              margin: const EdgeInsets.all(12.0),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        _userNotFound
+                            ? const Text(
+                                'Wrong username or password',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : const SizedBox(),
+                        FormFields(
+                            userNameController: userNameController,
+                            passwordController: passwordController,
+                            emailController: emailController),
+                        gaph16,
+                        LoginButton(
+                          formKey: _formKey,
+                          emailController: emailController,
+                          passwordController: passwordController,
+                          userNotFoundCallback: _isValid,
+                          successCallback: _successfulLogin,
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              widget.onPressed();
+                            },
+                            child: const Text('Create Account'))
+                      ],
+                    ),
                   ),
-                  // gaph8,
-                  TextButton(
-                      onPressed: () {
-                        widget.onPressed();
-                      },
-                      child: const Text('Create Account'))
-                ],
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

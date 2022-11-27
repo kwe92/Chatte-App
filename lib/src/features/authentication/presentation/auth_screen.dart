@@ -8,7 +8,7 @@ import 'package:chatapp/src/widgets/field_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key, required this.body, required this.title});
+  const AuthScreen({required this.body, required this.title, super.key});
 
   final Widget body;
   final String title;
