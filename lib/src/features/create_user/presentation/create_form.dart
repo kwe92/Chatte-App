@@ -1,15 +1,13 @@
 // ignore_for_file: prefer_final_fields
 
 import 'dart:io';
-
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:chatapp/src/features/create_user/domain/user_model.dart';
+import 'package:chatapp/src/features/create_user/presentation/submit_button.dart';
 import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
+import 'package:chatapp/src/utils/user_options.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class CreateForm extends StatefulWidget {
@@ -19,29 +17,6 @@ class CreateForm extends StatefulWidget {
   State<CreateForm> createState() => _CreateFormState();
 }
 
-Future<void> _createUser(
-    {required TextEditingController userNameController,
-    required TextEditingController passwordController,
-    required TextEditingController emailController,
-    required File? file,
-    required CollectionReference<Map<String, dynamic>> colRef}) async {
-  final userCredentials = await FirebaseAuth.instance
-      .createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-  final UserModel user = UserModel(
-      id: userCredentials.user!.uid,
-      userName: userNameController.text,
-      password: passwordController.text,
-      email: emailController.text);
-  final json = user.toJSON();
-  await colRef.doc(user.id).set(json);
-  final storageRef = FirebaseStorage.instance
-      .ref()
-      .child('user_images')
-      .child('${user.id}.jpg');
-  await storageRef.putFile(file!);
-}
-
 class _CreateFormState extends State<CreateForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -49,9 +24,22 @@ class _CreateFormState extends State<CreateForm> {
   File? _pickedImage;
   String _errMsg = '';
 
+// callback for picking an image
   void pickedImage(File? pickedimage) => setState(() {
         _pickedImage = pickedimage;
-        print('IMEAGE SENT TO FORM: ${pickedimage.toString()}');
+      });
+
+  void existingUser({required bool userExist, required bool isLoading}) {
+    setState(() {
+      _userExists = true;
+      // _errMsg = e.toString();
+      _isLoading = false;
+    });
+    // debugPrint(e.toString());
+  }
+
+  void isLoading(bool loading) => setState(() {
+        _isLoading = true;
       });
 
   @override
@@ -61,7 +49,6 @@ class _CreateFormState extends State<CreateForm> {
     TextEditingController userNameController = TextEditingController();
 
     return Center(
-      //TODO: Move the card into its own module
       child: _isLoading
           ? const CircularProgressIndicator.adaptive()
           : Card(
@@ -71,12 +58,7 @@ class _CreateFormState extends State<CreateForm> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
-                      UserImagePicker(callback: pickedImage
-                          // (image) => setState(() {
-                          //   _pickedImage = image;
-                          //   print('IMEAGE SENT TO FORM: ${image.toString()}');
-                          // }),
-                          ),
+                      UserImagePicker(callback: pickedImage),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -95,6 +77,14 @@ class _CreateFormState extends State<CreateForm> {
                               isLogin: true,
                             ),
                             gaph16,
+                            // SubmitButton(
+                            //     formKey: _formKey,
+                            //     userNameController: userNameController,
+                            //     emailController: emailController,
+                            //     passwordController: passwordController,
+                            //     imagefile: _pickedImage,
+                            //     userExistsCallback: existingUser,
+                            //     isLoadingCallback: isLoading),
                             SizedBox(
                               width: 400,
                               //TODO: This button needs to be its own module
@@ -108,7 +98,7 @@ class _CreateFormState extends State<CreateForm> {
                                       setState(() {
                                         _isLoading = true;
                                       });
-                                      await _createUser(
+                                      await UserOptions.createUser(
                                           userNameController:
                                               userNameController,
                                           passwordController:
