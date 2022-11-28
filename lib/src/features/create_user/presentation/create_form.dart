@@ -4,10 +4,7 @@ import 'dart:io';
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/create_user/presentation/submit_button.dart';
 import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
-import 'package:chatapp/src/utils/user_options.dart';
-import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateForm extends StatefulWidget {
@@ -21,25 +18,44 @@ class _CreateFormState extends State<CreateForm> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _userExists = false;
+  bool _imagePicked = true;
   File? _pickedImage;
   String _errMsg = '';
+
+  Widget uiErrorImageNotPicked(bool picked) => picked
+      ? const SizedBox()
+      : const Text(
+          'Image required',
+          style: TextStyle(color: Colors.red),
+        );
+
+  Widget uiErrorUserExists(bool exists) => exists
+      ? Text(
+          _errMsg,
+          style: const TextStyle(color: Colors.red),
+        )
+      : const SizedBox();
 
 // callback for picking an image
   void pickedImage(File? pickedimage) => setState(() {
         _pickedImage = pickedimage;
       });
 
-  void existingUser({required bool userExist, required bool isLoading}) {
+  // callback for submit button
+  void existingUser(
+      {required bool userExist,
+      required bool isLoading,
+      required String errorMsg}) {
     setState(() {
-      _userExists = true;
-      // _errMsg = e.toString();
-      _isLoading = false;
+      _userExists = userExist;
+      _errMsg = errorMsg.toString();
+      _isLoading = isLoading;
     });
-    // debugPrint(e.toString());
   }
 
+  // callback for submit button
   void isLoading(bool loading) => setState(() {
-        _isLoading = true;
+        _isLoading = loading;
       });
 
   @override
@@ -58,18 +74,17 @@ class _CreateFormState extends State<CreateForm> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
+                      //TODO: Change image file size
                       UserImagePicker(callback: pickedImage),
                       Form(
                         key: _formKey,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            _userExists
-                                ? Text(
-                                    _errMsg,
-                                    style: const TextStyle(color: Colors.red),
-                                  )
-                                : const SizedBox(),
+                            // Error message if an image is not picked
+                            uiErrorImageNotPicked(_imagePicked),
+                            // Error message if the user email exists
+                            uiErrorUserExists(_userExists),
                             FormFields(
                               userNameController: userNameController,
                               passwordController: passwordController,
@@ -77,53 +92,15 @@ class _CreateFormState extends State<CreateForm> {
                               isLogin: true,
                             ),
                             gaph16,
-                            // SubmitButton(
-                            //     formKey: _formKey,
-                            //     userNameController: userNameController,
-                            //     emailController: emailController,
-                            //     passwordController: passwordController,
-                            //     imagefile: _pickedImage,
-                            //     userExistsCallback: existingUser,
-                            //     isLoadingCallback: isLoading),
-                            SizedBox(
-                              width: 400,
-                              //TODO: This button needs to be its own module
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  final valid = Validator.trySubmit(_formKey);
-                                  if (valid) {
-                                    final colRef = FirebaseFirestore.instance
-                                        .collection('users');
-                                    try {
-                                      setState(() {
-                                        _isLoading = true;
-                                      });
-                                      await UserOptions.createUser(
-                                          userNameController:
-                                              userNameController,
-                                          passwordController:
-                                              passwordController,
-                                          emailController: emailController,
-                                          file: _pickedImage,
-                                          colRef: colRef);
-
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.pushReplacementNamed(
-                                          context, '/');
-                                    } catch (e) {
-                                      setState(() {
-                                        _userExists = true;
-                                        _errMsg = e.toString();
-                                        _isLoading = false;
-                                      });
-                                      debugPrint(e.toString());
-                                    }
-                                  } else {
-                                    return;
-                                  }
-                                },
-                                child: const Text('Submit'),
-                              ),
+                            // Submit button component to create a new user
+                            SubmitButton(
+                              formKey: _formKey,
+                              userNameController: userNameController,
+                              emailController: emailController,
+                              passwordController: passwordController,
+                              imagefile: _pickedImage,
+                              userExistsCallback: existingUser,
+                              isLoadingCallback: isLoading,
                             ),
                             TextButton(
                                 onPressed: () {
