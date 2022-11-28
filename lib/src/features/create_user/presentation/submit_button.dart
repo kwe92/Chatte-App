@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 typedef IsLoadingCallback = void Function(bool loading);
 typedef UserExsistsCallback = void Function(
-    {required bool userExist, required bool isLoading});
+    {required bool userExist,
+    required bool isLoading,
+    required String errorMsg});
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton(
@@ -28,39 +30,35 @@ class SubmitButton extends StatelessWidget {
   final UserExsistsCallback userExistsCallback;
   final File? imagefile;
   final GlobalKey<FormState> formKey;
+
   @override
   Widget build(BuildContext context) => SizedBox(
-      width: 400,
-      //TODO: This button needs to be its own module
-      child: ElevatedButton(
-        onPressed: () async {
-          final valid = Validator.trySubmit(formKey);
-          if (valid) {
-            final colRef = FirebaseFirestore.instance.collection('users');
-            try {
-              isLoadingCallback(true);
-              await UserOptions.createUser(
-                  userNameController: userNameController,
-                  passwordController: passwordController,
-                  emailController: emailController,
-                  file: imagefile,
-                  colRef: colRef);
+        width: 400,
+        child: ElevatedButton(
+          onPressed: () async {
+            final valid = Validator.trySubmit(formKey);
+            if (valid) {
+              final colRef = FirebaseFirestore.instance.collection('users');
+              try {
+                isLoadingCallback(true);
+                await UserOptions.createUser(
+                    userNameController: userNameController,
+                    passwordController: passwordController,
+                    emailController: emailController,
+                    file: imagefile,
+                    colRef: colRef);
 
-              // ignore: use_build_context_synchronously
-              // Navigator.pushReplacementNamed(context, '/');
-            } catch (e) {
-              userExistsCallback(userExist: true, isLoading: false);
-              // setState(() {
-              //   _userExists = true;
-              //   _errMsg = e.toString();
-              //   _isLoading = false;
-              // });
-              // debugPrint(e.toString());
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacementNamed(context, '/');
+              } catch (e) {
+                userExistsCallback(
+                    userExist: true, isLoading: false, errorMsg: e.toString());
+              }
+            } else {
+              return;
             }
-          } else {
-            return;
-          }
-        },
-        child: const Text('Submit'),
-      ));
+          },
+          child: const Text('Submit'),
+        ),
+      );
 }
