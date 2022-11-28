@@ -4,43 +4,33 @@ class UserModel {
     required this.email,
     required this.password,
     required this.username,
+    required this.url,
   });
   final String id;
   final String password;
   final String email;
   final String username;
+  final String url;
 
   factory UserModel.fromJSON(Map<String, Object?>? json) => UserModel(
       id: json!['id'] as String,
       email: json['email'] as String,
       password: json['password'] as String,
-      username: json['username'] as String);
-
-  Map<String, Object> toJSON() => {
-        'id': id,
-        'username': username,
-        'password': password,
-        'email': email,
-      };
+      username: json['username'] as String,
+      url: json['imageurl'] as String);
 
   @override
   String toString() {
-    return 'User(id: $id, password: $password, email: $email, username: $username)';
+    return 'UserModel(id: $id, password: $password, email: $email, username: $username, url: $url)';
   }
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is UserModel &&
-        other.id == id &&
-        other.password == password &&
-        other.email == email &&
-        other.username == username;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^ password.hashCode ^ email.hashCode ^ username.hashCode;
+  Map<String, dynamic> toJSON() {
+    return {
+      'id': id,
+      'password': password,
+      'email': email,
+      'username': username,
+      'imageurl': url,
+    };
   }
 }
