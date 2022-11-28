@@ -4,10 +4,12 @@ class MessageModel {
   const MessageModel(
       {required this.userid,
       required this.username,
+      required this.userImageUrl,
       required this.textID,
       required this.text});
   final String userid;
   final String username;
+  final String userImageUrl;
   final String textID;
   final String text;
   Timestamp get _timeStamp => Timestamp.now();
@@ -16,6 +18,7 @@ class MessageModel {
     return {
       'username': username,
       'userid': userid,
+      'userimage': userImageUrl,
       'textid': textID,
       'text': text.trim(),
       'timestamp': _timeStamp,
@@ -26,9 +29,15 @@ class MessageModel {
     return MessageModel(
       username: json['username'],
       userid: json['userid'],
+      userImageUrl: json['userimage'],
       textID: json['textid'],
       text: json['text'],
     );
+  }
+
+  @override
+  String toString() {
+    return 'MessageModel(userid: $userid, username: $username, userImageUrl: $userImageUrl, textID: $textID, text: $text)';
   }
 
   @override
@@ -38,6 +47,7 @@ class MessageModel {
     return other is MessageModel &&
         other.userid == userid &&
         other.username == username &&
+        other.userImageUrl == userImageUrl &&
         other.textID == textID &&
         other.text == text;
   }
@@ -46,12 +56,8 @@ class MessageModel {
   int get hashCode {
     return userid.hashCode ^
         username.hashCode ^
+        userImageUrl.hashCode ^
         textID.hashCode ^
         text.hashCode;
-  }
-
-  @override
-  String toString() {
-    return 'MessageModel(userid: $userid, username: $username, textID: $textID, text: $text)';
   }
 }

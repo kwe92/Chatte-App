@@ -18,17 +18,24 @@ class UserOptions {
     final userCredentials = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
-    final UserModel user = UserModel(
-        id: userCredentials.user!.uid,
-        username: userNameController.text,
-        password: passwordController.text,
-        email: emailController.text);
-    final json = user.toJSON();
-    await colRef.doc(user.id).set(json);
+    final userid = userCredentials.user!.uid;
+
     final storageRef = FirebaseStorage.instance
         .ref()
         .child('user_images')
-        .child('${user.id}.jpg');
+        .child('$userid.jpg');
     await storageRef.putFile(file!);
+    final UserModel user = UserModel(
+        id: userid,
+        username: userNameController.text,
+        password: passwordController.text,
+        email: emailController.text,
+        url: await storageRef.getDownloadURL());
+    final json = user.toJSON();
+    await colRef.doc(user.id).set(json);
   }
+
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getUser(
+          {required collection, required userid}) async =>
+      await FirebaseFirestore.instance.collection(collection).doc(userid).get();
 }

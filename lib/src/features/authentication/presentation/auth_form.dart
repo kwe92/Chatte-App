@@ -13,14 +13,8 @@
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/authentication/presentation/login_button.dart';
-import 'package:chatapp/src/features/create_user/domain/user_model.dart';
-import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-//TODO: Add image Picker functionality
 
 class AuthForm extends StatefulWidget {
   const AuthForm({required this.onPressed, super.key});
@@ -29,11 +23,6 @@ class AuthForm extends StatefulWidget {
   @override
   State<AuthForm> createState() => _AuthFormState();
 }
-
-// retrieves all users
-Future<DocumentSnapshot<Map<String, dynamic>>> _getUser(
-        {required collection, required userid}) async =>
-    await FirebaseFirestore.instance.collection(collection).doc(userid).get();
 
 class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
@@ -81,6 +70,7 @@ class _AuthFormState extends State<AuthForm> {
                         gaph16,
                         LoginButton(
                           formKey: _formKey,
+                          userNameController: userNameController,
                           emailController: emailController,
                           passwordController: passwordController,
                           userNotFoundCallback: _isValid,

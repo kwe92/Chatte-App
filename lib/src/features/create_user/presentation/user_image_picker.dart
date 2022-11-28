@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
 
 //TODO: Review call backs and why this works
-typedef void ImageFileCallback(File? imageFile);
+typedef ImageFileCallback = void Function(File? imageFile);
 
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({required this.callback, super.key});
@@ -39,7 +38,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
         TextButton.icon(
           onPressed: () async {
             final File? result = await _imagePicker();
-            print('IMGAGE: ${result.toString()}');
+            // print('IMGAGE: ${result.toString()}');
             setState(() {
               pickedImage = result;
             });
