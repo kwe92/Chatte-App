@@ -1,4 +1,3 @@
-import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/chat/domain/message_model.dart';
 import 'package:chatapp/src/features/chat/presentation/chat_bubble.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
@@ -28,8 +27,6 @@ class Messages extends StatelessWidget {
         }
         final List<Map<String, dynamic>> msgs = snapshot.data!;
 
-        // ignore: todo
-        //TODO: Implement dynamic list of MessageModel's properly
         final List<MessageModel> msgModels = [
           for (var msg in snapshot.data!) MessageModel.fromJSON(msg)
         ];
@@ -39,9 +36,6 @@ class Messages extends StatelessWidget {
           // padding: EdgeInsets.all(10),
           itemCount: snapshot.data?.length,
           itemBuilder: ((context, index) {
-            debugPrint(
-              snapshot.data.toString(),
-            );
             return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ChatBubble(
