@@ -16,6 +16,18 @@ class ChatScreen extends StatelessWidget {
     // current user passed from the auth screen
     final authInfo = ModalRoute.of(context)!.settings.arguments as Map;
     final UserModel currentUser = authInfo['currentuser'] as UserModel;
+
+    // SnackBar snackBar = SnackBar(
+    //         content:  Text(currentUser.username),);
+
+    // Dummy user
+    // const UserModel currentUser = UserModel(
+    //     id: '9999',
+    //     email: 'goku@dbz.com',
+    //     password: 'Bbz123!!@@',
+    //     username: 'Gohan',
+    //     url: '');
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -28,9 +40,8 @@ class ChatScreen extends StatelessWidget {
             user: currentUser,
           )),
           SendMessage(
-            username: currentUser.username,
-            userid: currentUser.id,
-          )
+            user: currentUser,
+          ),
         ]),
       ),
     );
