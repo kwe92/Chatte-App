@@ -86,7 +86,7 @@ class _SubmitButtonState extends State<SubmitButton> {
                 // ignore: use_build_context_synchronously
                 Navigator.pushReplacementNamed(context, '/');
               } catch (e) {
-                print(e);
+                debugPrint(e.toString());
                 widget.userExistsCallback(
                     userExist: true, isLoading: false, errorMsg: e.toString());
               }

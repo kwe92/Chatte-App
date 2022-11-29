@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
@@ -17,6 +16,7 @@ class UserImagePicker extends StatefulWidget {
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
+  // Get picture from users gallery
   Future<File?> _imagePicker() async {
     final ImagePickerPlatform picker = ImagePickerPlatform.instance;
     final pickedImageFile = await picker.pickImage(
@@ -29,13 +29,11 @@ class _UserImagePickerState extends State<UserImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        pickedImage == null
-            ? const CircularProgressIndicator.adaptive()
-            : CircleAvatar(
-                radius: 40,
-                backgroundImage: FileImage(pickedImage!),
-              ),
+      children: <Widget>[
+        CircleAvatar(
+          radius: 40,
+          backgroundImage: pickedImage == null ? null : FileImage(pickedImage!),
+        ),
         gaph4,
         TextButton.icon(
           onPressed: () async {
@@ -44,6 +42,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
             setState(() {
               pickedImage = result;
             });
+            // Return the picked image information to the create form
             widget.callback(result);
           },
           icon: const Icon(Icons.image),

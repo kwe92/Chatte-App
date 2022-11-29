@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class FormFields extends StatelessWidget {
   const FormFields(
-      {super.key,
-      required this.userNameController,
+      {required this.userNameController,
       required this.passwordController,
       required this.emailController,
-      this.isLogin = false});
+      this.isLogin = false,
+      super.key});
   // a boolean variable that allows this component to be used for both Auth and Create Screen
   final bool isLogin;
   final TextEditingController userNameController;
@@ -16,10 +16,12 @@ class FormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      // Email field
       TextFormField(
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         decoration: const InputDecoration(labelText: 'e-mail'),
+        // Email field validator
         validator: isLogin
             ? (value) {
                 if (value == null) {
@@ -37,11 +39,13 @@ and must contain @.""";
               }
             : null,
       ),
+      // Username field
       isLogin
           ? TextFormField(
               controller: userNameController,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(labelText: 'username'),
+              // Username field validator
               validator: (value) {
                 if (value!.length < 4) {
                   return 'Username must be at least 4 characters.';
@@ -53,11 +57,13 @@ and must contain @.""";
               },
             )
           : const SizedBox(),
+      // Password field
       TextFormField(
         controller: passwordController,
         obscureText: true,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(labelText: 'password'),
+        // Password field validator
         validator: isLogin
             ? (value) {
                 if (value!.length < 7) {
