@@ -4,7 +4,10 @@ import 'dart:io';
 import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/create_user/presentation/submit_button.dart';
 import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
+import 'package:chatapp/src/utils/user_options.dart';
+import 'package:chatapp/src/utils/validator.dart';
 import 'package:chatapp/src/widgets/form_fields.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateForm extends StatefulWidget {
@@ -22,6 +25,7 @@ class _CreateFormState extends State<CreateForm> {
   File? _pickedImage;
   String _errMsg = '';
 
+// Display UI error if image is not picked
   Widget uiErrorImageNotPicked(bool picked) => picked
       ? const SizedBox()
       : const Text(
@@ -29,6 +33,7 @@ class _CreateFormState extends State<CreateForm> {
           style: TextStyle(color: Colors.red),
         );
 
+  // Display a UI error if the user exists within the database
   Widget uiErrorUserExists(bool exists) => exists
       ? Text(
           _errMsg,
@@ -36,24 +41,18 @@ class _CreateFormState extends State<CreateForm> {
         )
       : const SizedBox();
 
-// callback for picking an image
+// callback for picking an image | UserImagePicker
   void pickedImage(File? pickedimage) => setState(() {
         _pickedImage = pickedimage;
+        _imagePicked = true;
       });
 
-  // callback for submit button
-  void existingUser(
-      {required bool userExist,
-      required bool isLoading,
-      required String errorMsg}) {
-    setState(() {
-      _userExists = userExist;
-      _errMsg = errorMsg.toString();
-      _isLoading = isLoading;
-    });
-  }
+//  setState for a picked image | SubmitButton
+  void userImagePicked(bool picked) => setState(() {
+        _imagePicked = picked;
+      });
 
-  // callback for submit button
+  // callback for when the async operation is executing | Submit Button
   void isLoading(bool loading) => setState(() {
         _isLoading = loading;
       });
@@ -74,7 +73,6 @@ class _CreateFormState extends State<CreateForm> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     children: [
-                      //TODO: Change image file size
                       UserImagePicker(callback: pickedImage),
                       Form(
                         key: _formKey,
@@ -93,15 +91,61 @@ class _CreateFormState extends State<CreateForm> {
                             ),
                             gaph16,
                             // Submit button component to create a new user
-                            SubmitButton(
-                              formKey: _formKey,
-                              userNameController: userNameController,
-                              emailController: emailController,
-                              passwordController: passwordController,
-                              imagefile: _pickedImage,
-                              userExistsCallback: existingUser,
-                              isLoadingCallback: isLoading,
-                            ),
+                            // SubmitButton(
+                            //   formKey: _formKey,
+                            //   userNameController: userNameController,
+                            //   emailController: emailController,
+                            //   passwordController: passwordController,
+                            //   imagefile: _pickedImage,
+                            //   userExistsCallback: existingUser,
+                            //   isLoadingCallback: isLoading,
+                            //   pickedImageCallBack: userImagePicked,
+                            // ),
+                            SizedBox(
+                                width: 400,
+                                //TODO: This button needs to be its own module
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (_pickedImage == null) {
+                                      // Show ui error for image and validators
+                                      userImagePicked(false);
+                                      Validator.trySubmit(_formKey);
+                                      return;
+                                    }
+                                    final valid = Validator.trySubmit(_formKey);
+                                    // Validation successful create a user
+                                    if (valid) {
+                                      final colRef = FirebaseFirestore.instance
+                                          .collection('users');
+                                      try {
+                                        isLoading(true);
+                                        await UserOptions.createUser(
+                                            userNameController:
+                                                userNameController,
+                                            passwordController:
+                                                passwordController,
+                                            emailController: emailController,
+                                            file: _pickedImage,
+                                            colRef: colRef);
+
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.pushReplacementNamed(
+                                            context, '/');
+                                      } catch (e) {
+                                        setState(() {
+                                          _userExists = true;
+                                          _errMsg = e.toString();
+                                          _isLoading = false;
+                                        });
+                                        debugPrint(e.toString());
+                                      }
+                                    } else {
+                                      return;
+                                    }
+                                  },
+                                  child: const Text('Submit'),
+                                )),
+                            // Navigate to auth page
                             TextButton(
                                 onPressed: () {
                                   Navigator.pushReplacementNamed(context, '/');

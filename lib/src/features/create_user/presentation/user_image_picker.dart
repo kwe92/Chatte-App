@@ -5,7 +5,6 @@ import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
 
-//TODO: Review call backs and why this works
 typedef ImageFileCallback = void Function(File? imageFile);
 
 class UserImagePicker extends StatefulWidget {
@@ -20,7 +19,8 @@ class UserImagePicker extends StatefulWidget {
 class _UserImagePickerState extends State<UserImagePicker> {
   Future<File?> _imagePicker() async {
     final ImagePickerPlatform picker = ImagePickerPlatform.instance;
-    final pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedImageFile = await picker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50, maxWidth: 150);
     return File(pickedImageFile!.path);
   }
 
@@ -30,10 +30,12 @@ class _UserImagePickerState extends State<UserImagePicker> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: pickedImage == null ? null : FileImage(pickedImage!),
-        ),
+        pickedImage == null
+            ? const CircularProgressIndicator.adaptive()
+            : CircleAvatar(
+                radius: 40,
+                backgroundImage: FileImage(pickedImage!),
+              ),
         gaph4,
         TextButton.icon(
           onPressed: () async {

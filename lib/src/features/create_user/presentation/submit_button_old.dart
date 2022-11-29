@@ -17,7 +17,7 @@ typedef UserExsistsCallback = void Function(
 
 typedef PickedImageCallBack = void Function(bool picked);
 
-class SubmitButton extends StatefulWidget {
+class SubmitButton extends StatelessWidget {
   const SubmitButton(
       {required this.formKey,
       required this.userNameController,
@@ -37,57 +37,33 @@ class SubmitButton extends StatefulWidget {
   final PickedImageCallBack pickedImageCallBack;
   final File? imagefile;
   final GlobalKey<FormState> formKey;
-  @override
-  State<SubmitButton> createState() => _SubmitButtonState();
-}
-
-class _SubmitButtonState extends State<SubmitButton> {
-  Future<void> myAsyncMethod(
-      BuildContext context, VoidCallback onSuccess) async {
-    final colRef = FirebaseFirestore.instance.collection('users');
-    await UserOptions.createUser(
-        userNameController: widget.userNameController,
-        passwordController: widget.passwordController,
-        emailController: widget.emailController,
-        file: widget.imagefile,
-        colRef: colRef);
-    onSuccess.call();
-  }
 
   @override
   Widget build(BuildContext context) => SizedBox(
         width: 400,
         child: ElevatedButton(
           onPressed: () async {
-            final valid = Validator.trySubmit(widget.formKey);
-            if (widget.imagefile == null) {
-              widget.pickedImageCallBack(false);
+            final valid = Validator.trySubmit(formKey);
+            if (imagefile == null) {
+              pickedImageCallBack(false);
               return;
             }
             if (valid) {
               final colRef = FirebaseFirestore.instance.collection('users');
               try {
-                widget.isLoadingCallback(true);
-
-                myAsyncMethod(context, () {
-                  if (!mounted) {
-                    return;
-                  }
-                  Navigator.pushReplacementNamed(context, '/');
-                });
-
+                isLoadingCallback(true);
                 await UserOptions.createUser(
-                    userNameController: widget.userNameController,
-                    passwordController: widget.passwordController,
-                    emailController: widget.emailController,
-                    file: widget.imagefile,
+                    userNameController: userNameController,
+                    passwordController: passwordController,
+                    emailController: emailController,
+                    file: imagefile,
                     colRef: colRef);
 
                 // ignore: use_build_context_synchronously
                 Navigator.pushReplacementNamed(context, '/');
               } catch (e) {
                 print(e);
-                widget.userExistsCallback(
+                userExistsCallback(
                     userExist: true, isLoading: false, errorMsg: e.toString());
               }
             } else {
