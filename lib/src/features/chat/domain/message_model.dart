@@ -25,6 +25,7 @@ class MessageModel {
     };
   }
 
+  /// Create a [MessageModel] from a json object
   factory MessageModel.fromJSON(Map<String, dynamic> json) {
     return MessageModel(
       username: json['username'],
