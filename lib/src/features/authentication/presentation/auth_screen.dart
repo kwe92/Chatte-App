@@ -1,16 +1,11 @@
-// class AuthScreen stfl
-// Widget Tree:
-//  - Scaffold: background color theme primary color
-//    - AuthForm
-// nl
 //TODO: Change animation upon navigation to a diffrent screen, right now it fades in kinda ugly
+import 'package:chatapp/src/features/authentication/presentation/auth_form.dart';
 import 'package:chatapp/src/widgets/field_scaffold.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({required this.body, required this.title, super.key});
+  const AuthScreen({required this.title, super.key});
 
-  final Widget body;
   final String title;
 
   @override
@@ -21,7 +16,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return FieldScaffold(
-      body: widget.body,
+      body: const AuthForm(),
       title: widget.title,
       bgColor: Theme.of(context).backgroundColor,
     );

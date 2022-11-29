@@ -29,12 +29,6 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SnackBar snackBar = SnackBar(
-    //   content: Text(
-    //     userNameController.text,
-    //     style: const TextStyle(color: Colors.white),
-    //   ),
-    // );
     return SizedBox(
       width: 400,
       child: ElevatedButton(
@@ -45,18 +39,26 @@ class LoginButton extends StatelessWidget {
                   email: emailController.text,
                   password: passwordController.text);
 
+              // Callback to show user an error message if the user is not found
               userNotFoundCallback(false);
+
               final String userid = FirebaseAuth.instance.currentUser!.uid;
+
+              // Get user by id
               final docSnapshot = await UserOptions.getUser(
                   collection: 'users', userid: userid);
+
+              // Currently logged in user data
               final currentUser = UserModel.fromJSON(docSnapshot.data());
               successCallback(true);
 
-              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              //Navigate to the chat page and push the current users data as well
               // ignore: use_build_context_synchronously
               Navigator.pushReplacementNamed(context, '/chatscreen',
                   arguments: {'currentuser': currentUser});
-            } catch (e) {
+            }
+            // Catch any error thrown and display a user not found messasge to the user
+            catch (e) {
               // debugPrint(e.toString());
               userNotFoundCallback(true);
             }
