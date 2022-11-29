@@ -1,10 +1,9 @@
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:chatapp/src/features/authentication/presentation/auth_form.dart';
 import 'package:chatapp/src/features/authentication/presentation/auth_screen.dart';
 import 'package:chatapp/src/features/chat/presentation/chat_screen.dart';
-import 'package:chatapp/src/features/create_user/presentation/create_form.dart';
 import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 const _title = 'Convertir';
 
@@ -13,28 +12,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: AppColor.appBar,
-        backgroundColor: AppColor.backGround2,
-        // buttonTheme: ButtonTheme.of(context).copyWith(
-        //     shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(0)))
+    return ProviderScope(
+      child: MaterialApp(
+        theme: ThemeData(
+          primarySwatch: AppColor.appBar,
+          backgroundColor: AppColor.backGround2,
+          // buttonTheme: ButtonTheme.of(context).copyWith(
+          //     shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(0)))
+        ),
+        title: _title,
+        initialRoute: '/',
+        //  '/chatscreen',
+        routes: <String, WidgetBuilder>{
+          '/': (context) => const AuthScreen(title: _title),
+          '/chatscreen': (context) => const ChatScreen(title: _title),
+          '/createuser': (context) => const CreateScreen(),
+        },
       ),
-      title: _title,
-      initialRoute: '/',
-      //  '/chatscreen',
-      routes: <String, WidgetBuilder>{
-        '/': (context) => AuthScreen(
-            title: _title,
-            body: AuthForm(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/createuser');
-              },
-            )),
-        '/chatscreen': (context) => const ChatScreen(title: _title),
-        '/createuser': (context) => const CreateScreen(body: CreateForm()),
-      },
     );
   }
 }
