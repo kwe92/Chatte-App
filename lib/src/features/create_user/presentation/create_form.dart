@@ -145,7 +145,7 @@ class _CreateFormState extends State<CreateForm> {
                                   },
                                   child: const Text('Submit'),
                                 )),
-                            // Navigate to auth page
+                            // Navigate to auth page`
                             TextButton(
                                 onPressed: () {
                                   Navigator.pushReplacementNamed(context, '/');
