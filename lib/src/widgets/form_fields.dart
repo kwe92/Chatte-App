@@ -22,22 +22,7 @@ class FormFields extends StatelessWidget {
         keyboardType: TextInputType.emailAddress,
         decoration: const InputDecoration(labelText: 'e-mail'),
         // Email field validator
-        validator: isLogin
-            ? (value) {
-                if (value == null) {
-                  return 'Email can not be empty.';
-                }
-                if (value.isEmpty ||
-                    !value.contains('@') ||
-                    value.contains(' ')) {
-                  return """
-Email can not be empty
-or contain spaces 
-and must contain @.""";
-                }
-                return null;
-              }
-            : null,
+        validator: isLogin ? emptyEmailValidator : null,
       ),
       // Username field
       isLogin
@@ -46,15 +31,7 @@ and must contain @.""";
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(labelText: 'username'),
               // Username field validator
-              validator: (value) {
-                if (value!.length < 4) {
-                  return 'Username must be at least 4 characters.';
-                }
-                if (value.contains(RegExp(r'[^A-Za-z0-9]'))) {
-                  return 'Username can not contain special characters or spaces.';
-                }
-                return null;
-              },
+              validator: userNameValidator,
             )
           : const SizedBox(),
       // Password field
@@ -64,14 +41,43 @@ and must contain @.""";
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(labelText: 'password'),
         // Password field validator
-        validator: isLogin
-            ? (value) {
-                if (value!.length < 7) {
-                  return 'Password must be at least 7 characters long.';
-                }
-                if (!value.contains(RegExp(
-                    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))) {
-                  return r"""
+        validator: isLogin ? passwordValidator : null,
+      )
+    ]);
+  }
+}
+
+String? emptyEmailValidator(value) {
+  if (value == null) {
+    return 'Email can not be empty.';
+  }
+  if (value.isEmpty || !value.contains('@') || value.contains(' ')) {
+    return """
+Email can not be empty
+or contain spaces 
+and must contain @.""";
+  } else {
+    return null;
+  }
+}
+
+String? userNameValidator(value) {
+  if (value!.length < 4) {
+    return 'Username must be at least 4 characters.';
+  }
+  if (value.contains(RegExp(r'[^A-Za-z0-9]'))) {
+    return 'Username can not contain special characters or spaces.';
+  }
+  return null;
+}
+
+String? passwordValidator(value) {
+  if (value!.length < 7) {
+    return 'Password must be at least 7 characters long.';
+  }
+  if (!value.contains(RegExp(
+      r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))) {
+    return r"""
 
 Password Requirements:
 
@@ -84,11 +90,6 @@ Password Requirements:
   - least 8 - 32 characters in length.
 
 """;
-                }
-                return null;
-              }
-            : null,
-      )
-    ]);
   }
+  return null;
 }
