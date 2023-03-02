@@ -11,6 +11,7 @@ class StreamFireStore {
           {required FirebaseFirestore firestore,
           required String collectionPath}) =>
       firestore.collection(collectionPath);
+
 //TODO: Maybe shorten the implementation a bit an need to make descending optional
   static Query<Map<String, dynamic>> _returnCollectionOrdered(
           {required CollectionReference<Map<String, dynamic>> collectionRef,
