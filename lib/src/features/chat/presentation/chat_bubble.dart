@@ -43,16 +43,16 @@ class ChatBubble extends StatelessWidget {
           // Currently logged in user delete messages on tap
           child: GestureDetector(
             onLongPress: currentUser.id == message.userid
-                ? () {
-                    // bottomSheet(context, message.userid);
+                ? () => {
+                      // bottomSheet(context, message.userid);
 
-                    // Option to delete the message pressed permanently
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) => bottomSheet(
-                          context: context, messageid: message.textID),
-                    );
-                  }
+                      // Option to delete the message pressed permanently
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => bottomSheet(
+                            context: context, messageid: message.textID),
+                      )
+                    }
                 : null,
             //Chat bubble container
             child: Container(
