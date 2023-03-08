@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
     return ProviderScope(
       child: MaterialApp(
         theme: ThemeData(
-          primarySwatch: AppColor.appBar,
-          backgroundColor: AppColor.backGround2,
+          primarySwatch: Colors.amber,
+          colorScheme: ColorScheme.highContrastDark(),
           // buttonTheme: ButtonTheme.of(context).copyWith(
           //     shape: RoundedRectangleBorder(
           //         borderRadius: BorderRadius.circular(0)))
