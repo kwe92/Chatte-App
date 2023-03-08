@@ -14,13 +14,9 @@ class ChatBubble extends StatelessWidget {
   final UserModel currentUser;
   final MessageModel message;
 
+  static const double _radius = 21;
+
 // Styling for user text and user name
-  TextStyle _style(
-          {double fontSize = 18.0, FontWeight? weight = FontWeight.bold}) =>
-      currentUser.id == message.userid
-          ? TextStyle(
-              fontSize: fontSize, color: Colors.black, fontWeight: weight)
-          : TextStyle(fontSize: 18.0, color: Colors.white, fontWeight: weight);
 
   @override
   Widget build(BuildContext context) {
@@ -31,66 +27,113 @@ class ChatBubble extends StatelessWidget {
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
       children: [
-        // Other user avatar
-        currentUser.id != message.userid
-            ? CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(message.userImageUrl),
-              )
-            : const SizedBox(),
-        gapw8,
+        // TODO: Refactor
         Expanded(
-          // Currently logged in user delete messages on tap
-          child: GestureDetector(
-            onLongPress: currentUser.id == message.userid
-                ? () => {
-                      // bottomSheet(context, message.userid);
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              currentUser.id != message.userid
+                  ? CircleAvatar(
+                      radius: _radius,
+                      backgroundImage: NetworkImage(message.userImageUrl),
+                    )
+                  : const SizedBox(),
+              gapw8,
+              Expanded(
+                // Currently logged in user delete messages on tap
+                child: GestureDetector(
+                  onLongPress: currentUser.id == message.userid
+                      ? () => {
+                            // bottomSheet(context, message.userid);
 
-                      // Option to delete the message pressed permanently
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => bottomSheet(
-                            context: context, messageid: message.textID),
-                      )
-                    }
-                : null,
-            //Chat bubble container
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                // Chat bubble color based on current user
-                color: currentUser.id == message.userid
-                    ? Colors.grey[500]
-                    : Theme.of(context).primaryColor,
+                            // Option to delete the message pressed permanently
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => bottomSheet(
+                                  context: context, messageid: message.textID),
+                            )
+                          }
+                      : null,
+                  //Chat bubble container
+                  child: _nameTextBubble(context, currentUser, message),
+                ),
               ),
-              child:
-                  // User name and text
-                  Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // username
-                  Text(message.username, style: _style(fontSize: 16)),
-                  gaph4,
-                  // message
-                  Text(
-                    message.text,
-                    style: _style(weight: null),
-                  )
-                ],
-              ),
-            ),
+              // Currently Logged in user Avatar
+              currentUser.id == message.userid ? gapw8 : const SizedBox(),
+              currentUser.id == message.userid
+                  ? CircleAvatar(
+                      radius: _radius,
+                      backgroundImage: NetworkImage(message.userImageUrl),
+                    )
+                  : const SizedBox(),
+            ],
           ),
         ),
-        // Currently Logged in user Avatar
-        currentUser.id == message.userid ? gapw8 : const SizedBox(),
-        currentUser.id == message.userid
-            ? CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(message.userImageUrl),
-              )
-            : const SizedBox(),
       ],
     );
   }
 }
+
+TextStyle _style(
+        {double fontSize = 18.0,
+        FontWeight? weight = FontWeight.bold,
+        required UserModel currentUser,
+        required MessageModel message,
+        required context}) =>
+    currentUser.id == message.userid
+        ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
+        : TextStyle(
+            fontSize: fontSize,
+            color: Theme.of(context).primaryColor,
+            fontWeight: weight);
+
+Widget _nameTextBubble(
+        BuildContext context, UserModel currentUser, MessageModel message) =>
+    Container(
+      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.only(top: 20),
+      decoration: BoxDecoration(
+        borderRadius: currentUser.id != message.userid
+            ? const BorderRadius.only(
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              )
+            : const BorderRadius.only(
+                topLeft: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+                bottomRight: Radius.circular(18),
+              )
+        // BorderRadius.circular(30)
+        ,
+        // Chat bubble color based on current user
+        color: currentUser.id == message.userid
+            ? Colors.grey[500]
+            : const Color.fromRGBO(228, 231, 233, 1),
+      ),
+      child:
+          // User name and text
+          Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // message
+          Text(
+            message.text,
+            style: _style(
+                fontSize: 16,
+                currentUser: currentUser,
+                message: message,
+                context: context),
+          ),
+          gaph8,
+          // username
+          Text(message.username,
+              style: _style(
+                  fontSize: 16,
+                  currentUser: currentUser,
+                  message: message,
+                  context: context)),
+        ],
+      ),
+    );
