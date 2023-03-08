@@ -59,7 +59,7 @@ class _SendMessageState extends State<SendMessage> {
                 },
                 icon: Icon(
                   Icons.send,
-                  color: Theme.of(context).primaryColor,
+                  // color: Theme.of(context).primaryColor,
                 ),
               )),
         )
