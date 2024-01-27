@@ -7,13 +7,9 @@ import 'package:chatapp/src/utils/user_options.dart';
 import 'package:chatapp/src/utils/validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 typedef IsLoadingCallback = void Function(bool loading);
-typedef UserExsistsCallback = void Function(
-    {required bool userExist,
-    required bool isLoading,
-    required String errorMsg});
+typedef UserExsistsCallback = void Function({required bool userExist, required bool isLoading, required String errorMsg});
 
 typedef PickedImageCallBack = void Function(bool picked);
 
@@ -63,8 +59,7 @@ class SubmitButton extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/');
               } catch (e) {
                 print(e);
-                userExistsCallback(
-                    userExist: true, isLoading: false, errorMsg: e.toString());
+                userExistsCallback(userExist: true, isLoading: false, errorMsg: e.toString());
               }
             } else {
               return;

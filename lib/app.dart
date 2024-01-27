@@ -1,4 +1,3 @@
-import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/authentication/presentation/auth_screen.dart';
 import 'package:chatapp/src/features/chat/presentation/chat_screen.dart';
 import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';

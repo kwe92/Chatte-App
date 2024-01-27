@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:image_picker_ios/image_picker_ios.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +18,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
   // Get picture from users gallery
   Future<File?> _imagePicker() async {
     final ImagePickerPlatform picker = ImagePickerPlatform.instance;
-    final pickedImageFile = await picker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50, maxWidth: 150);
+    final pickedImageFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50, maxWidth: 150);
     return File(pickedImageFile!.path);
   }
 

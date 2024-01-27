@@ -2,15 +2,10 @@ import 'package:chatapp/src/constants/source_of_truth.dart';
 import 'package:chatapp/src/features/chat/domain/message_model.dart';
 import 'package:chatapp/src/features/chat/presentation/delete_message_bottom_sheet.dart';
 import 'package:chatapp/src/features/create_user/domain/user_model.dart';
-import 'package:chatapp/src/providers/chats_provider.dart';
-import 'package:chatapp/src/utils/user_options.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble(
-      {required this.currentUser, required this.message, super.key});
+  const ChatBubble({required this.currentUser, required this.message, super.key});
   final UserModel currentUser;
   final MessageModel message;
 
@@ -23,9 +18,7 @@ class ChatBubble extends StatelessWidget {
     // Chat Bubble Start
     return Row(
       // Aligns text given current user
-      mainAxisAlignment: currentUser.id == message.userid
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment: currentUser.id == message.userid ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         // TODO: Refactor
         Expanded(
@@ -49,8 +42,7 @@ class ChatBubble extends StatelessWidget {
                             // Option to delete the message pressed permanently
                             showModalBottomSheet(
                               context: context,
-                              builder: (context) => bottomSheet(
-                                  context: context, messageid: message.textID),
+                              builder: (context) => bottomSheet(context: context, messageid: message.textID),
                             )
                           }
                       : null,
@@ -82,14 +74,9 @@ TextStyle _style(
         required context}) =>
     currentUser.id == message.userid
         ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
-        : TextStyle(
-            fontSize: fontSize,
-            color: Theme.of(context).primaryColor,
-            fontWeight: weight);
+        : TextStyle(fontSize: fontSize, color: Theme.of(context).primaryColor, fontWeight: weight);
 
-Widget _nameTextBubble(
-        BuildContext context, UserModel currentUser, MessageModel message) =>
-    Container(
+Widget _nameTextBubble(BuildContext context, UserModel currentUser, MessageModel message) => Container(
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
@@ -107,9 +94,7 @@ Widget _nameTextBubble(
         // BorderRadius.circular(30)
         ,
         // Chat bubble color based on current user
-        color: currentUser.id == message.userid
-            ? Colors.grey[500]
-            : const Color.fromRGBO(228, 231, 233, 1),
+        color: currentUser.id == message.userid ? Colors.grey[500] : const Color.fromRGBO(228, 231, 233, 1),
       ),
       child:
           // User name and text
@@ -120,20 +105,11 @@ Widget _nameTextBubble(
           // message
           Text(
             message.text,
-            style: _style(
-                fontSize: 16,
-                currentUser: currentUser,
-                message: message,
-                context: context),
+            style: _style(fontSize: 16, currentUser: currentUser, message: message, context: context),
           ),
           gaph8,
           // username
-          Text(message.username,
-              style: _style(
-                  fontSize: 16,
-                  currentUser: currentUser,
-                  message: message,
-                  context: context)),
+          Text(message.username, style: _style(fontSize: 16, currentUser: currentUser, message: message, context: context)),
         ],
       ),
     );

@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:chatapp/src/features/create_user/presentation/submit_button.dart';
 import 'package:chatapp/src/features/create_user/presentation/user_image_picker.dart';
 import 'package:chatapp/src/utils/user_options.dart';
 import 'package:chatapp/src/utils/validator.dart';
@@ -115,22 +114,18 @@ class _CreateFormState extends State<CreateForm> {
                                     final valid = Validator.trySubmit(_formKey);
                                     // Validation successful create a user
                                     if (valid) {
-                                      final colRef = FirebaseFirestore.instance
-                                          .collection('users');
+                                      final colRef = FirebaseFirestore.instance.collection('users');
                                       try {
                                         isLoading(true);
                                         await UserOptions.createUser(
-                                            userNameController:
-                                                userNameController,
-                                            passwordController:
-                                                passwordController,
+                                            userNameController: userNameController,
+                                            passwordController: passwordController,
                                             emailController: emailController,
                                             file: _pickedImage,
                                             colRef: colRef);
 
                                         // ignore: use_build_context_synchronously
-                                        Navigator.pushReplacementNamed(
-                                            context, '/');
+                                        Navigator.pushReplacementNamed(context, '/');
                                       } catch (e) {
                                         setState(() {
                                           _userExists = true;
