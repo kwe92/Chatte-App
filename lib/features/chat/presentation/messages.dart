@@ -2,7 +2,7 @@ import 'package:chatapp/features/chat/domain/message_model.dart';
 import 'package:chatapp/features/chat/presentation/chat_bubble.dart';
 import 'package:chatapp/features/create_user/domain/user_model.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
-import 'package:chatapp/app/utils/stream_firestore.dart';
+import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +14,7 @@ class Messages extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return StreamBuilder(
       // Generate a list of all messages in the Firestore instance
-      stream: StreamFireStore.getListDocsData(collectionPath: ref.read(chatProvider.notifier).state, orderBy: 'timestamp'),
+      stream: firestoreService.getListDocsData(collectionPath: ref.read(chatProvider.notifier).state, orderBy: 'timestamp'),
       builder: ((context, snapshot) {
         // Loading page
         if (snapshot.connectionState == ConnectionState.waiting) {
