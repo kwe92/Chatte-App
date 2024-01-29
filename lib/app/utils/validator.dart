@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class Validator {
-  static bool trySubmit(GlobalKey<FormState> key) {
-    return key.currentState!.validate();
-  }
+  Validator._();
+  static bool trySubmit(GlobalKey<FormState> key) => key.currentState?.validate() ?? false;
 }
