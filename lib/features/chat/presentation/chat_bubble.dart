@@ -1,13 +1,18 @@
 import 'package:chatapp/app/resources/reusables.dart';
 import 'package:chatapp/features/chat/domain/message_model.dart';
 import 'package:chatapp/features/chat/presentation/delete_message_bottom_sheet.dart';
-import 'package:chatapp/features/create_user/domain/user_model.dart';
+import 'package:chatapp/shared/models/base_user.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
-  const ChatBubble({required this.currentUser, required this.message, super.key});
-  final UserModel currentUser;
+  final BaseUser currentUser;
   final MessageModel message;
+
+  const ChatBubble({
+    required this.currentUser,
+    required this.message,
+    super.key,
+  });
 
   static const double _radius = 21;
 
@@ -69,14 +74,14 @@ class ChatBubble extends StatelessWidget {
 TextStyle _style(
         {double fontSize = 18.0,
         FontWeight? weight = FontWeight.bold,
-        required UserModel currentUser,
+        required BaseUser currentUser,
         required MessageModel message,
         required context}) =>
     currentUser.id == message.userid
         ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
         : TextStyle(fontSize: fontSize, color: Theme.of(context).primaryColor, fontWeight: weight);
 
-Widget _nameTextBubble(BuildContext context, UserModel currentUser, MessageModel message) => Container(
+Widget _nameTextBubble(BuildContext context, BaseUser currentUser, MessageModel message) => Container(
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(

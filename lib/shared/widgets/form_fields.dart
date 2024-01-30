@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
 class FormFields extends StatelessWidget {
-  const FormFields(
-      {required this.userNameController, required this.passwordController, required this.emailController, this.isLogin = false, super.key});
   // a boolean variable that allows this component to be used for both Auth and Create Screen
   final bool isLogin;
   final TextEditingController userNameController;
   final TextEditingController passwordController;
   final TextEditingController emailController;
 
+  const FormFields({
+    required this.userNameController,
+    required this.passwordController,
+    required this.emailController,
+    this.isLogin = false,
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       // Email field
+      // TODO: use mutable variables and onChanged instead of controller text
+
       TextFormField(
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
@@ -42,6 +50,8 @@ class FormFields extends StatelessWidget {
     ]);
   }
 }
+
+// TODO: the validators should be moved to a string service
 
 String? emptyEmailValidator(value) {
   if (value == null) {

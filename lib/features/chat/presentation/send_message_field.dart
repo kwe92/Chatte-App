@@ -1,13 +1,15 @@
-import 'package:chatapp/features/create_user/domain/user_model.dart';
+import 'package:chatapp/shared/models/base_user.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
-import 'package:chatapp/app/utils/user_options.dart';
 import 'package:chatapp/app/utils/validator.dart';
+import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SendMessage extends StatefulWidget {
+  final BaseUser user;
+
   const SendMessage({required this.user, super.key});
-  final UserModel user;
+
   @override
   State<SendMessage> createState() => _SendMessageState();
 }
@@ -50,7 +52,7 @@ class _SendMessageState extends State<SendMessage> {
                   if (Validator.trySubmit(_formKey)) {
                     final collectionPath = ref.read(chatProvider.notifier).state;
                     final newMsg = messageController.text;
-                    UserOptions.sendMessage(widget.user, newMsg, collectionPath);
+                    chatService.sendMessage(widget.user, newMsg, collectionPath);
                     // debugPrint(newMsg);
                     messageController.clear();
                   }

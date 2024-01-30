@@ -3,8 +3,8 @@
 import 'dart:io';
 import 'package:chatapp/app/resources/reusables.dart';
 import 'package:chatapp/features/create_user/presentation/user_image_picker.dart';
-import 'package:chatapp/app/utils/user_options.dart';
 import 'package:chatapp/app/utils/validator.dart';
+import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/widgets/form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -117,10 +117,10 @@ class _CreateFormState extends State<CreateForm> {
                                       final colRef = FirebaseFirestore.instance.collection('users');
                                       try {
                                         isLoading(true);
-                                        await UserOptions.createUser(
-                                            userNameController: userNameController,
-                                            passwordController: passwordController,
-                                            emailController: emailController,
+                                        await userService.createUserInFirebase(
+                                            userName: userNameController.text,
+                                            password: passwordController.text,
+                                            email: emailController.text,
                                             file: _pickedImage,
                                             colRef: colRef);
 

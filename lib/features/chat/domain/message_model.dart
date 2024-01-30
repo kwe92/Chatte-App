@@ -1,18 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// TODO: create base model
+
 class MessageModel {
-  const MessageModel(
-      {required this.userid,
-      required this.username,
-      required this.userImageUrl,
-      required this.textID,
-      required this.text});
   final String userid;
   final String username;
   final String userImageUrl;
   final String textID;
   final String text;
   Timestamp get _timeStamp => Timestamp.now();
+
+  const MessageModel({
+    required this.userid,
+    required this.username,
+    required this.userImageUrl,
+    required this.textID,
+    required this.text,
+  });
 
   Map<String, dynamic> toJSON() {
     return {
@@ -55,10 +59,6 @@ class MessageModel {
 
   @override
   int get hashCode {
-    return userid.hashCode ^
-        username.hashCode ^
-        userImageUrl.hashCode ^
-        textID.hashCode ^
-        text.hashCode;
+    return userid.hashCode ^ username.hashCode ^ userImageUrl.hashCode ^ textID.hashCode ^ text.hashCode;
   }
 }

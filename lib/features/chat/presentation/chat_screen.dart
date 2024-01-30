@@ -1,14 +1,15 @@
 import 'package:chatapp/features/chat/presentation/logout_button.dart';
 import 'package:chatapp/features/chat/presentation/messages.dart';
 import 'package:chatapp/features/chat/presentation/send_message_field.dart';
-import 'package:chatapp/features/create_user/domain/user_model.dart';
+import 'package:chatapp/shared/models/base_user.dart';
 import 'package:flutter/material.dart';
 
 // TODO: Show bottom snackbar when a new user enters the chat and if its the first time they are entering the chat then say welcome instead
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({required this.title, super.key});
-  final String title;
+  final BaseUser currentUser;
+
+  const ChatScreen({required this.currentUser, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +22,8 @@ class ChatScreen extends StatelessWidget {
     //     url: '');
 
     // current user passed from the auth screen
-    final authInfo = ModalRoute.of(context)!.settings.arguments as Map;
-    final UserModel currentUser = authInfo['currentuser'] as UserModel;
+    // final authInfo = ModalRoute.of(context)!.settings.arguments as Map;
+    // final BaseUser currentUser = authInfo['currentuser'] as BaseUser;
 
     return SafeArea(
       child: Scaffold(
