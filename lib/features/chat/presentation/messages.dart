@@ -1,14 +1,15 @@
 import 'package:chatapp/features/chat/domain/message_model.dart';
 import 'package:chatapp/features/chat/presentation/chat_bubble.dart';
-import 'package:chatapp/features/create_user/domain/user_model.dart';
+import 'package:chatapp/shared/models/base_user.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Messages extends ConsumerWidget {
+  final BaseUser user;
+
   const Messages({required this.user, super.key});
-  final UserModel user;
 
   @override
   Widget build(BuildContext context, ref) {
