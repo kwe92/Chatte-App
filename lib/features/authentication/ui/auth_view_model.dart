@@ -1,6 +1,11 @@
+import 'package:chatapp/shared/models/base_user.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp/shared/services/services.dart';
 
 class AuthViewModel extends ChangeNotifier {
+  AuthViewModel();
+
+  // TODO: use mutable variables instead of controller text
   //The form key is used to validate the form
   final formKey = GlobalKey<FormState>();
 
@@ -9,23 +14,24 @@ class AuthViewModel extends ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
 
-  bool _userNotFound = false;
-
-  bool _userFound = false;
-
-  bool get userNotFound => _userNotFound;
-
-  bool get userFound => _userFound;
-
-// callback to handle user not found
-  void isValid(bool valid) {
-    _userNotFound = valid;
-    notifyListeners();
+  Future<String?> signInWithEmailAndPassword() async {
+    return await firebaseService.signInWithEmailAndPassword(emailController.text, passwordController.text);
   }
 
-// callback to handle successful login
-  void successfulLogin(bool successful) {
-    _userFound = successful;
+  // TODO: maybe temporally coupled with signInWithEmailAndPassword | fix it at some point
+  Future<BaseUser> createCurrentUser() async {
+    final String userid = firebaseService.currentUser!.uid;
+
+    // Currently logged in user data
+    final currentUser = await userService.getCurrentUser('users', userid);
+
+    return currentUser;
+  }
+
+  void clearControllers() {
+    emailController.clear();
+    passwordController.clear();
+    userNameController.clear();
     notifyListeners();
   }
 }
