@@ -1,7 +1,5 @@
-import 'package:chatapp/src/constants/source_of_truth.dart';
-import 'package:chatapp/src/features/authentication/presentation/auth_screen.dart';
-import 'package:chatapp/src/features/chat/presentation/chat_screen.dart';
-import 'package:chatapp/src/features/create_user/presentation/create_user_screen.dart';
+import 'package:chatapp/features/authentication/ui/auth_view.dart';
+import 'package:chatapp/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +14,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.amber,
-          colorScheme: ColorScheme.highContrastDark(),
+          // colorScheme: const ColorScheme.highContrastDark(),
           // buttonTheme: ButtonTheme.of(context).copyWith(
           //     shape: RoundedRectangleBorder(
           //         borderRadius: BorderRadius.circular(0)))
@@ -25,8 +23,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         //  '/chatscreen',
         routes: <String, WidgetBuilder>{
-          '/': (context) => const AuthScreen(title: _title),
-          '/chatscreen': (context) => const ChatScreen(title: _title),
+          '/': (context) => const AuthView(title: _title),
+          // '/chatscreen': (context) => const ChatScreen(),
           '/createuser': (context) => const CreateScreen(),
         },
       ),
