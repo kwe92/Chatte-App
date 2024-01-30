@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// TODO: Refactor
+
 class FireStoreService {
   const FireStoreService();
 
   /// [FirebaseFirestore] instance
   static FirebaseFirestore get _firebaseFirestore => FirebaseFirestore.instance;
+
+  FirebaseFirestore get instance => _firebaseFirestore;
 
   /// [CollectionReference] to the specified Firestore collection path
   static CollectionReference<Map<String, dynamic>> _returnCollection(
