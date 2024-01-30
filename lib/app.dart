@@ -1,5 +1,4 @@
 import 'package:chatapp/features/authentication/ui/auth_view.dart';
-import 'package:chatapp/features/chat/presentation/chat_screen.dart';
 import 'package:chatapp/features/create_user/presentation/create_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
         //  '/chatscreen',
         routes: <String, WidgetBuilder>{
           '/': (context) => const AuthView(title: _title),
-          '/chatscreen': (context) => const ChatScreen(title: _title),
+          // '/chatscreen': (context) => const ChatScreen(),
           '/createuser': (context) => const CreateScreen(),
         },
       ),
