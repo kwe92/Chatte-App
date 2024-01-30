@@ -5,53 +5,84 @@ import 'package:chatapp/shared/models/base_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 // TODO: write comments
-class FirebaseService {
-  late FirebaseAuth authInstance;
-  late FirebaseStorage storageInstance;
-  late FirebaseFirestore firestoreInstance;
+class FirebaseService extends ChangeNotifier {
+  bool _isLoggedIn = false;
+
+  late FirebaseAuth _authInstance;
+  late FirebaseStorage _storageInstance;
+  late FirebaseFirestore _firestoreInstance;
+
+  User? get currentUser => _authInstance.currentUser;
+  bool get isLoggedIn => _isLoggedIn;
 
   FirebaseService() {
     initialize();
   }
 
   void initialize() {
-    authInstance = FirebaseAuth.instance;
-    storageInstance = FirebaseStorage.instance;
-    firestoreInstance = FirebaseFirestore.instance;
+    _authInstance = FirebaseAuth.instance;
+    _storageInstance = FirebaseStorage.instance;
+    _firestoreInstance = FirebaseFirestore.instance;
   }
 
-  Future<void> createUserWithEmailAndPassword(String email, String password) async {
-    await authInstance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+  void setIsLoggedIn(bool loggedIn) {
+    _isLoggedIn = loggedIn;
+    notifyListeners();
+  }
+
+  Future<String?> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      await _authInstance.signInWithEmailAndPassword(email: email, password: password);
+      setIsLoggedIn(true);
+      return null;
+    } catch (e) {
+      debugPrint('exception in signInWithEmailAndPassword: $e');
+      return e.toString();
+    }
+  }
+
+  // TODO: add islogged in after you change create user to navigate to the chat view
+
+  Future<(UserCredential?, String?)> createUserWithEmailAndPassword(String email, String password) async {
+    try {
+      final userCredential = await _authInstance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return (userCredential, null);
+    } catch (e) {
+      debugPrint('exception in createUserWithEmailAndPassword: $e');
+      return (null, e.toString());
+    }
   }
 
   // uplead image and return current image reference
-  Future<Reference> uploadImageToStorage(String imageName, File imageFile) async {
-    final storageRef = storageInstance.ref().child('user_images').child('$imageName.jpg');
-    await storageRef.putFile(imageFile);
+  Future<Reference> uploadImageToStorage(String imageName, File? imageFile) async {
+    final storageRef = _storageInstance.ref().child('user_images').child('$imageName.jpg');
+    // TODO: NEED-PLACE-HOLDER-IMAGE!
+    await storageRef.putFile(imageFile ?? File('NEED-PLACE-HOLDER-IMAGE!'));
 
     return storageRef;
   }
 
   // Retrieve a single user by id
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUser({required String collectionPath, required userid}) async =>
-      await firestoreInstance.collection(collectionPath).doc(userid).get();
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUser({required String collectionPath, required String userid}) async =>
+      await _firestoreInstance.collection(collectionPath).doc(userid).get();
 
   // Delete a message given the currently logged in user
   Future<void> deleteMessage({required String id, required String path}) async {
-    final docUsers = firestoreInstance.collection(path).doc(id);
+    final docUsers = _firestoreInstance.collection(path).doc(id);
     await docUsers.delete();
   }
 
 // Send a message by current user
-  void sendMessage(BaseUser user, String text, String path) {
+  void sendMessage(BaseUser user, String text, String path) async {
     final colRef = FirebaseFirestore.instance.collection(path);
     final textID = colRef.doc().id;
     MessageModel newMessage = MessageModel(userid: user.id, username: user.username, userImageUrl: user.url, textID: textID, text: text);
-    colRef.doc(textID).set(newMessage.toJSON());
+    await colRef.doc(textID).set(newMessage.toJSON());
   }
 }
