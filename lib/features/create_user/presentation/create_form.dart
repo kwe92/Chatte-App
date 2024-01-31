@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:chatapp/app/resources/reusables.dart';
+import 'package:chatapp/features/authentication/ui/sign_in_view.dart';
 import 'package:chatapp/features/create_user/presentation/user_image_picker.dart';
 import 'package:chatapp/app/utils/validator.dart';
 import 'package:chatapp/shared/services/services.dart';
@@ -86,7 +87,6 @@ class _CreateFormState extends State<CreateForm> {
                               userNameController: userNameController,
                               passwordController: passwordController,
                               emailController: emailController,
-                              isLogin: true,
                             ),
                             gaph16,
                             // Submit button component to create a new user
@@ -125,7 +125,10 @@ class _CreateFormState extends State<CreateForm> {
                                             colRef: colRef);
 
                                         // ignore: use_build_context_synchronously
-                                        Navigator.pushReplacementNamed(context, '/');
+                                        await appNavigator.pushReplacement(
+                                          context,
+                                          (context) => const SignInView(),
+                                        );
                                       } catch (e) {
                                         setState(() {
                                           _userExists = true;
@@ -142,10 +145,12 @@ class _CreateFormState extends State<CreateForm> {
                                 )),
                             // Navigate to auth page`
                             TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(context, '/');
-                                },
-                                child: const Text('I already have an account'))
+                              onPressed: () async => await appNavigator.pushReplacement(
+                                context,
+                                (context) => const SignInView(),
+                              ),
+                              child: const Text('I already have an account'),
+                            ),
                           ],
                         ),
                       ),

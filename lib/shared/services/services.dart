@@ -5,6 +5,8 @@ import 'package:chatapp/shared/services/firestore_service.dart';
 import 'package:chatapp/shared/services/get_it.dart';
 import 'package:chatapp/shared/services/user_service.dart';
 
+// TODO: create an abstract base class for Services | start with app router
+
 FireStoreService get firestoreService => locator.get<FireStoreService>();
 FirebaseService get firebaseService => locator.get<FirebaseService>();
 AppNavigator get appNavigator => locator.get<AppNavigator>();
