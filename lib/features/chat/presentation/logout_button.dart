@@ -1,12 +1,15 @@
+import 'package:chatapp/features/authentication/ui/sign_in_view.dart';
+import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
 
 List<Widget>? logoutButton({required BuildContext context}) => [
       Padding(
         padding: const EdgeInsets.only(right: 12.0),
         child: TextButton.icon(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/');
-          },
+          onPressed: () async => await appNavigator.pushReplacement(
+            context,
+            (context) => const SignInView(),
+          ),
           icon: const Icon(Icons.menu),
           label: const Text(
             'Logout',
