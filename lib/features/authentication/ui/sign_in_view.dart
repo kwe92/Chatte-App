@@ -14,6 +14,8 @@ import 'package:chatapp/features/authentication/ui/sign_in_view_model.dart';
 import 'package:chatapp/shared/widgets/form_fields.dart';
 import 'package:provider/provider.dart';
 
+// TODO: snackbar UI error if the user is not found
+
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
 
@@ -45,11 +47,15 @@ class SignInView extends StatelessWidget {
                 const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SocialMediaIconButton(iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/apple_icon.png'),
+                    SocialMediaIconButton(
+                      assetImageScale: 1.25,
+                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/apple_icon.png',
+                    ),
                     gapW16,
                     SocialMediaIconButton(iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/facebook_icon.png'),
                     gapW16,
-                    SocialMediaIconButton(iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon.png'),
+                    SocialMediaIconButton(
+                        isSVG: true, svgImageScale: 0.75, iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon2.svg'),
                   ],
                 ),
                 gapH28,
@@ -62,7 +68,7 @@ class SignInView extends StatelessWidget {
                       child: Text(
                         'or',
                         style: TextStyle(
-                          color: AppColor.grey2,
+                          color: AppColor.grey3,
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
                         ),
@@ -92,10 +98,9 @@ class SignInView extends StatelessWidget {
                             gapH24,
                             Row(
                               children: [
-                                // TODO: add state in view model
                                 CustomSwitch(
-                                  value: true,
-                                  onChanged: (value) {},
+                                  value: model.switchState,
+                                  onChanged: model.setSwitchState,
                                 ),
                                 const Text(
                                   'Remember Me',
@@ -127,7 +132,6 @@ class SignInView extends StatelessWidget {
 
                                       model.clearControllers();
                                     }
-                                    // TODO: snackbar UI error if the user is not found
                                   }
                                 },
                                 child: const Padding(
@@ -150,7 +154,7 @@ class SignInView extends StatelessWidget {
                                   "Don't have an account?",
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: AppColor.grey1,
+                                    color: AppColor.grey3,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
