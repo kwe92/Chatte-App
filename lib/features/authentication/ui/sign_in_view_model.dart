@@ -5,13 +5,22 @@ import 'package:chatapp/shared/services/services.dart';
 class SignInViewModel extends ChangeNotifier {
   SignInViewModel();
 
-  // TODO: use mutable variables instead of controller text
-  //The form key is used to validate the form
   final formKey = GlobalKey<FormState>();
 
+  bool _switchState = false;
+
+  bool get switchState => _switchState;
+
   // Controllers
+  // TODO: use mutable variables instead of controller text
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  void setSwitchState(bool isSwitchedOn) {
+    _switchState = isSwitchedOn;
+
+    notifyListeners();
+  }
 
   Future<String?> signInWithEmailAndPassword() async {
     return await firebaseService.signInWithEmailAndPassword(emailController.text, passwordController.text);
