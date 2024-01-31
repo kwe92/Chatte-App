@@ -1,53 +1,102 @@
 import 'package:flutter/material.dart';
 
 class FormFields extends StatelessWidget {
-  // a boolean variable that allows this component to be used for both Auth and Create Screen
-  final bool isLogin;
-  final TextEditingController userNameController;
+  // TODO: use mutable variables and onChanged instead of controller text
+
+  final TextEditingController? userNameController;
   final TextEditingController passwordController;
   final TextEditingController emailController;
+  final bool showUserNameField;
 
   const FormFields({
-    required this.userNameController,
     required this.passwordController,
     required this.emailController,
-    this.isLogin = false,
+    this.showUserNameField = true,
+    this.userNameController,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      // Email field
-      // TODO: use mutable variables and onChanged instead of controller text
+    const floatingTextStyle = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: Color(0xff121212),
+    );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        // Email field
 
-      TextFormField(
-        controller: emailController,
-        keyboardType: TextInputType.emailAddress,
-        decoration: const InputDecoration(labelText: 'e-mail'),
-        // Email field validator
-        validator: isLogin ? emptyEmailValidator : null,
-      ),
-      // Username field
-      isLogin
-          ? TextFormField(
-              controller: userNameController,
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(labelText: 'username'),
-              // Username field validator
-              validator: userNameValidator,
-            )
-          : const SizedBox(),
-      // Password field
-      TextFormField(
-        controller: passwordController,
-        obscureText: true,
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(labelText: 'password'),
-        // Password field validator
-        validator: isLogin ? passwordValidator : null,
-      )
-    ]);
+        const Text(
+          "Email",
+          style: floatingTextStyle,
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        TextFormField(
+          controller: emailController,
+          keyboardType: TextInputType.emailAddress,
+          decoration: const InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            labelText: "Email",
+            hintText: "Enter Email",
+          ),
+          // Email field validator
+          validator: emptyEmailValidator,
+        ),
+
+        // Username field
+        if (showUserNameField) ...[
+          const SizedBox(
+            height: 24,
+          ),
+          const Text(
+            "Username",
+            style: floatingTextStyle,
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          TextFormField(
+            controller: userNameController,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              labelText: "Username",
+              hintText: "Enter Username",
+            ),
+            // Username field validator
+            validator: userNameValidator,
+          ),
+        ],
+        const SizedBox(
+          height: 24,
+        ),
+        const Text(
+          "Password",
+          style: floatingTextStyle,
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        // Password field
+        TextFormField(
+          controller: passwordController,
+          obscureText: true,
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            labelText: "Password",
+            hintText: "Enter Password",
+          ),
+          // Password field validator
+          validator: passwordValidator,
+        )
+      ],
+    );
   }
 }
 
