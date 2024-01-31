@@ -1,10 +1,21 @@
 import 'package:chatapp/app/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SocialMediaIconButton extends StatelessWidget {
   final String iconPath;
+  final bool isSVG;
+  final double assetImageScale;
 
-  const SocialMediaIconButton({required this.iconPath, super.key});
+  final double svgImageScale;
+
+  const SocialMediaIconButton({
+    required this.iconPath,
+    this.isSVG = false,
+    this.assetImageScale = 1.0,
+    this.svgImageScale = 1.0,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +38,22 @@ class SocialMediaIconButton extends StatelessWidget {
             ),
             borderRadius: sharedBorderRadius,
           ),
-          child: Image.asset(
-            iconPath,
-            fit: BoxFit.contain,
-          ),
+          child: !isSVG
+              ? Transform.scale(
+                  scale: assetImageScale,
+                  child: Image.asset(
+                    iconPath,
+                    fit: BoxFit.contain,
+                  ),
+                )
+              : Transform.scale(
+                  scale: svgImageScale,
+                  child: SvgPicture.asset(iconPath),
+                ),
         ),
       ),
     );
   }
 }
+
+// TODO: notes | Changing Image Sizes with Transform.scale
