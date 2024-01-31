@@ -11,18 +11,18 @@ class AppTheme {
         inputDecorationTheme: inputDecorationTheme,
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            shape: resolver(
-              (states) => const RoundedRectangleBorder(
+            shape: materialStatePropertyAdapter(
+              const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(8),
                 ),
               ),
             ),
-            backgroundColor: resolver(
-              (states) => AppColor.primaryThemeColor,
+            backgroundColor: materialStatePropertyAdapter(
+              AppColor.primaryThemeColor,
             ),
-            textStyle: resolver(
-              (states) => TextStyle(
+            textStyle: materialStatePropertyAdapter(
+              TextStyle(
                 foreground: Paint()..color = Colors.white,
               ),
             ),
@@ -51,8 +51,12 @@ final InputDecorationTheme inputDecorationTheme = () {
   );
 }();
 
-MaterialStateProperty<T> resolver<T>(T Function(Set<MaterialState> states) callback) {
-  return MaterialStateProperty.resolveWith<T>(callback);
-}
+/// A convenience method to shorten calls to [MaterialStateProperty.resolveWith].
+///
+/// Converts an [Object] of type [T] to a [MaterialStateProperty] of type [T]
+MaterialStateProperty<T> materialStatePropertyAdapter<T extends Object>(T object) =>
+    MaterialStateProperty.resolveWith<T>((states) => object);
 
 // TODO: Notes on ColorScheme
+
+// TODO: notes on Adapters
