@@ -11,7 +11,7 @@ import 'package:chatapp/features/authentication/ui/sign_in_view_model.dart';
 import 'package:chatapp/shared/widgets/form_fields.dart';
 import 'package:provider/provider.dart';
 
-// TODO: rename to Signin View and convert to a stateless widget
+// TODO: Refactor widget to make it smaller
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -28,7 +28,7 @@ class SignInView extends StatelessWidget {
             // padding: const EdgeInsets.symmetric(horizontal: 24),
             padding: const EdgeInsets.only(
               left: 24,
-              top: 56,
+              top: 72,
               right: 24,
             ),
 
@@ -115,9 +115,10 @@ class SignInView extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 36),
                               //Login button
                               SizedBox(
-                                width: 400,
+                                width: double.maxFinite,
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     if (Validator.trySubmit(model.formKey)) {
@@ -148,6 +149,10 @@ class SignInView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
+                              ),
+
+                              const SizedBox(
+                                height: 32,
                               ),
 
                               //Navigate to create account page
@@ -261,79 +266,5 @@ class CustomSwitch extends StatelessWidget {
         onChanged: onChanged,
       ),
     );
-    // return Transform(
-    //   transform: ,
-    // child: Switch(
-    //   value: value,
-    //   onChanged: onChanged,
-    // ),
-    // );
   }
 }
-
-
-// OLD UI
-
-// Center(
-//             child:
-//                 // Auth Form
-//                 Card(
-//               margin: const EdgeInsets.all(12.0),
-//               // Scrollable form
-//               child: SingleChildScrollView(
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(12.0),
-//                   // Form start
-//                   child: Form(
-//                     key: model.formKey,
-//                     child: Column(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: <Widget>[
-//                         // Form Fields
-//                         FormFields(
-//                           userNameController: model.userNameController,
-//                           passwordController: model.passwordController,
-//                           emailController: model.emailController,
-//                         ),
-//                         gaph16,
-//                         //Login button
-//                         SizedBox(
-//                           width: 400,
-//                           child: ElevatedButton(
-//                             onPressed: () async {
-//                               if (Validator.trySubmit(model.formKey)) {
-//                                 var error = await model.signInWithEmailAndPassword();
-
-//                                 if (error == null) {
-//                                   // Currently logged in user data
-//                                   final currentUser = await model.createCurrentUser();
-
-//                                   await appNavigator.push(
-//                                     context,
-//                                     (context) => ChatScreen(currentUser: currentUser),
-//                                   );
-
-//                                   model.clearControllers();
-//                                 }
-//                                 // TODO: snackbar UI error if the user is not found
-//                               }
-//                             },
-//                             child: const Text('Login'),
-//                           ),
-//                         ),
-
-//                         //Navigate to create account page
-//                         TextButton(
-//                           onPressed: () => appNavigator.pushReplacement(
-//                             context,
-//                             (context) => const CreateScreen(),
-//                           ),
-//                           child: const Text('Sign Up'),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           );
