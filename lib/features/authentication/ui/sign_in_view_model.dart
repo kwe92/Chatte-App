@@ -7,26 +7,52 @@ class SignInViewModel extends ChangeNotifier {
 
   final formKey = GlobalKey<FormState>();
 
-  bool _switchState = false;
-
-  bool get switchState => _switchState;
-
   // Controllers
-  // TODO: use mutable variables instead of controller text
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool _switchState = false;
+
+  String _email = '';
+
+  String _password = '';
+
+  bool get switchState => _switchState;
+
+  String get email => _email;
+
+  String get password => _password;
+
   void setSwitchState(bool isSwitchedOn) {
     _switchState = isSwitchedOn;
+    notifyListeners();
+  }
+
+  void setEmail(String email) {
+    _email = email.trim().toLowerCase();
+    debugPrint(_email);
+    notifyListeners();
+  }
+
+  void setPassword(String password) {
+    _password = password.trim();
+    debugPrint(_password);
 
     notifyListeners();
   }
 
-  Future<String?> signInWithEmailAndPassword() async {
-    return await firebaseService.signInWithEmailAndPassword(emailController.text, passwordController.text);
+  Future<(BaseUser?, String?)> signInWithEmailAndPassword() async {
+    var error = await firebaseService.signInWithEmailAndPassword(email, password);
+
+    if (error == null) {
+      // currently logged in user data
+      final currentUser = await createCurrentUser();
+
+      return (currentUser, null);
+    }
+    return (null, error.toString());
   }
 
-  // TODO: maybe temporally coupled with signInWithEmailAndPassword | fix it at some point
   Future<BaseUser> createCurrentUser() async {
     final String userid = firebaseService.currentUser!.uid;
 
@@ -36,9 +62,11 @@ class SignInViewModel extends ChangeNotifier {
     return currentUser;
   }
 
-  void clearControllers() {
+  void clearText() {
     emailController.clear();
     passwordController.clear();
+    setEmail('');
+    setPassword('');
     notifyListeners();
   }
 }
