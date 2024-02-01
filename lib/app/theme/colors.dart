@@ -12,6 +12,8 @@ class AppColor {
 
   static const black0 = Color(0xff262626);
 
+  static const black1 = Color(0xff121212);
+
   static const offWhite = Color(0xffe1e1e1);
 
   static const primaryPurple = Color(0xff6200ee);

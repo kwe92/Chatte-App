@@ -36,7 +36,7 @@ class ChatBubble extends StatelessWidget {
                       backgroundImage: NetworkImage(message.userImageUrl),
                     )
                   : const SizedBox(),
-              gapw8,
+              gapW8,
               Expanded(
                 // Currently logged in user delete messages on tap
                 child: GestureDetector(
@@ -56,7 +56,7 @@ class ChatBubble extends StatelessWidget {
                 ),
               ),
               // Currently Logged in user Avatar
-              currentUser.id == message.userid ? gapw8 : const SizedBox(),
+              currentUser.id == message.userid ? gapW8 : const SizedBox(),
               currentUser.id == message.userid
                   ? CircleAvatar(
                       radius: _radius,
@@ -110,11 +110,24 @@ Widget _nameTextBubble(BuildContext context, BaseUser currentUser, MessageModel 
           // message
           Text(
             message.text,
-            style: _style(fontSize: 16, currentUser: currentUser, message: message, context: context),
+            style: _style(
+              fontSize: 16,
+              currentUser: currentUser,
+              message: message,
+              context: context,
+            ),
           ),
-          gaph8,
+          gapH8,
           // username
-          Text(message.username, style: _style(fontSize: 16, currentUser: currentUser, message: message, context: context)),
+          Text(
+            message.username,
+            style: _style(
+              fontSize: 16,
+              currentUser: currentUser,
+              message: message,
+              context: context,
+            ),
+          ),
         ],
       ),
     );

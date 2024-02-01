@@ -6,7 +6,9 @@ import 'package:chatapp/features/authentication/ui/sign_in_view.dart';
 import 'package:chatapp/features/create_user/presentation/user_image_picker.dart';
 import 'package:chatapp/app/utils/validator.dart';
 import 'package:chatapp/shared/services/services.dart';
-import 'package:chatapp/shared/widgets/form_fields.dart';
+import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
+import 'package:chatapp/shared/utils/classes/form_field_validators.dart';
+import 'package:chatapp/shared/widgets/base_form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -83,12 +85,19 @@ class _CreateFormState extends State<CreateForm> {
                             uiErrorImageNotPicked(_imagePicked),
                             // Error message if the user email exists
                             uiErrorUserExists(_userExists),
-                            FormFields(
-                              userNameController: userNameController,
-                              passwordController: passwordController,
-                              emailController: emailController,
+                            BaseFormFields(
+                              formFieldParameters: FormFieldParameters(
+                                userNameController: userNameController,
+                                passwordController: passwordController,
+                                emailController: emailController,
+                              ),
+                              formFieldValidators: FormFieldValidators(
+                                emailValidator: stringService.emptyEmailValidator,
+                                userNameValidator: stringService.userNameValidator,
+                                passwordValidator: stringService.passwordValidator,
+                              ),
                             ),
-                            gaph16,
+                            gapH16,
                             // Submit button component to create a new user
                             // SubmitButton(
                             //   formKey: _formKey,
