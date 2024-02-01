@@ -24,6 +24,8 @@ class AppTheme {
             textStyle: materialStatePropertyAdapter(
               TextStyle(
                 foreground: Paint()..color = Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
