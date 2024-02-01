@@ -12,6 +12,8 @@ import 'package:chatapp/shared/widgets/base_form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// TODO: rename to SignUpView
+
 class CreateForm extends StatefulWidget {
   const CreateForm({super.key});
 
