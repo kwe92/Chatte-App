@@ -7,11 +7,13 @@ import 'package:chatapp/features/authentication/ui/widgets/custom_switch.dart';
 import 'package:chatapp/features/authentication/ui/widgets/horizontal_line.dart';
 import 'package:chatapp/features/authentication/ui/widgets/social_media_icon_button.dart';
 import 'package:chatapp/features/chat/presentation/chat_screen.dart';
-import 'package:chatapp/features/create_user/presentation/create_user_screen.dart';
+import 'package:chatapp/features/create_user/ui/sign_up_view.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
 import 'package:chatapp/shared/utils/classes/form_field_validators.dart';
 import 'package:chatapp/shared/widgets/base_form_fields.dart';
+import 'package:chatapp/shared/widgets/custom_text_button.dart';
+import 'package:chatapp/shared/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp/features/authentication/ui/sign_in_view_model.dart';
 import 'package:provider/provider.dart';
@@ -125,40 +127,29 @@ class SignInView extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            gapH36,
+                            gapH24,
                             //Login button
-                            SizedBox(
-                              width: double.maxFinite,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (Validator.trySubmit(model.formKey)) {
-                                    var (currentUser, error) = await model.signInWithEmailAndPassword();
 
-                                    if (error == null) {
-                                      await appNavigator.push(
-                                        context,
-                                        (context) => ChatScreen(currentUser: currentUser!),
-                                      );
+                            MainButton(
+                              onPressed: () async {
+                                if (Validator.trySubmit(model.formKey)) {
+                                  var (currentUser, error) = await model.signInWithEmailAndPassword();
 
-                                      model.clearText();
-                                      return;
-                                    }
-                                    toastService.showSnackBar(context, "invalid username or password, please try again.");
+                                  if (error == null) {
+                                    await appNavigator.push(
+                                      context,
+                                      (context) => ChatScreen(currentUser: currentUser!),
+                                    );
+
+                                    model.clearText();
+                                    return;
                                   }
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                  toastService.showSnackBar(context, "invalid username or password, please try again.");
+                                }
+                              },
+                              child: const Text('Login'),
                             ),
-                            gapH32,
+                            gapH24,
                             Row(
                               children: [
                                 const Text(
@@ -169,11 +160,12 @@ class SignInView extends StatelessWidget {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                TextButton(
+                                CustomTextButton(
                                   onPressed: () => appNavigator.pushReplacement(
                                     context,
-                                    (context) => const CreateScreen(),
+                                    (context) => const SignUpView(),
                                   ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
                                   child: const Text('Create Account'),
                                 ),
                               ],
