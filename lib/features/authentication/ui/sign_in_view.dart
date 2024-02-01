@@ -9,12 +9,12 @@ import 'package:chatapp/features/authentication/ui/widgets/social_media_icon_but
 import 'package:chatapp/features/chat/presentation/chat_screen.dart';
 import 'package:chatapp/features/create_user/presentation/create_user_screen.dart';
 import 'package:chatapp/shared/services/services.dart';
+import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
+import 'package:chatapp/shared/utils/classes/form_field_validators.dart';
+import 'package:chatapp/shared/widgets/base_form_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp/features/authentication/ui/sign_in_view_model.dart';
-import 'package:chatapp/shared/widgets/form_fields.dart';
 import 'package:provider/provider.dart';
-
-// TODO: snackbar UI error if the user is not found
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -52,10 +52,15 @@ class SignInView extends StatelessWidget {
                       iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/apple_icon.png',
                     ),
                     gapW16,
-                    SocialMediaIconButton(iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/facebook_icon.png'),
+                    SocialMediaIconButton(
+                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/facebook_icon.png',
+                    ),
                     gapW16,
                     SocialMediaIconButton(
-                        isSVG: true, svgImageScale: 0.75, iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon2.svg'),
+                      isSVG: true,
+                      svgImageScale: 0.75,
+                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon.svg',
+                    ),
                   ],
                 ),
                 gapH28,
@@ -90,10 +95,18 @@ class SignInView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             // Form Fields
-                            FormFields(
+                            BaseFormFields(
                               showUserNameField: false,
-                              passwordController: model.passwordController,
-                              emailController: model.emailController,
+                              formFieldParameters: FormFieldParameters(
+                                emailController: model.emailController,
+                                passwordController: model.passwordController,
+                                setEmail: model.setEmail,
+                                setPassword: model.setPassword,
+                              ),
+                              formFieldValidators: FormFieldValidators(
+                                emailValidator: stringService.emptyEmailValidator,
+                                passwordValidator: stringService.emptyPasswordValidator,
+                              ),
                             ),
                             gapH24,
                             Row(
@@ -119,19 +132,18 @@ class SignInView extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (Validator.trySubmit(model.formKey)) {
-                                    var error = await model.signInWithEmailAndPassword();
+                                    var (currentUser, error) = await model.signInWithEmailAndPassword();
 
                                     if (error == null) {
-                                      // Currently logged in user data
-                                      final currentUser = await model.createCurrentUser();
-
                                       await appNavigator.push(
                                         context,
-                                        (context) => ChatScreen(currentUser: currentUser),
+                                        (context) => ChatScreen(currentUser: currentUser!),
                                       );
 
-                                      model.clearControllers();
+                                      model.clearText();
+                                      return;
                                     }
+                                    toastService.showSnackBar(context, "invalid username or password, please try again.");
                                   }
                                 },
                                 child: const Padding(
@@ -147,7 +159,6 @@ class SignInView extends StatelessWidget {
                               ),
                             ),
                             gapH32,
-                            //Navigate to create account page
                             Row(
                               children: [
                                 const Text(
