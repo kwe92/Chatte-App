@@ -1,3 +1,5 @@
+// TODO rename to AbstractUser
+
 abstract class BaseUser {
   const BaseUser({
     required this.id,

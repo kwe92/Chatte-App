@@ -2,12 +2,17 @@
 
 import 'dart:io';
 import 'package:chatapp/app/resources/reusables.dart';
+import 'package:chatapp/features/authentication/ui/sign_in_view.dart';
 import 'package:chatapp/features/create_user/presentation/user_image_picker.dart';
 import 'package:chatapp/app/utils/validator.dart';
 import 'package:chatapp/shared/services/services.dart';
-import 'package:chatapp/shared/widgets/form_fields.dart';
+import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
+import 'package:chatapp/shared/utils/classes/form_field_validators.dart';
+import 'package:chatapp/shared/widgets/base_form_fields.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+// TODO: rename to SignUpView
 
 class CreateForm extends StatefulWidget {
   const CreateForm({super.key});
@@ -82,13 +87,19 @@ class _CreateFormState extends State<CreateForm> {
                             uiErrorImageNotPicked(_imagePicked),
                             // Error message if the user email exists
                             uiErrorUserExists(_userExists),
-                            FormFields(
-                              userNameController: userNameController,
-                              passwordController: passwordController,
-                              emailController: emailController,
-                              isLogin: true,
+                            BaseFormFields(
+                              formFieldParameters: FormFieldParameters(
+                                userNameController: userNameController,
+                                passwordController: passwordController,
+                                emailController: emailController,
+                              ),
+                              formFieldValidators: FormFieldValidators(
+                                emailValidator: stringService.emptyEmailValidator,
+                                userNameValidator: stringService.userNameValidator,
+                                passwordValidator: stringService.passwordValidator,
+                              ),
                             ),
-                            gaph16,
+                            gapH16,
                             // Submit button component to create a new user
                             // SubmitButton(
                             //   formKey: _formKey,
@@ -125,7 +136,10 @@ class _CreateFormState extends State<CreateForm> {
                                             colRef: colRef);
 
                                         // ignore: use_build_context_synchronously
-                                        Navigator.pushReplacementNamed(context, '/');
+                                        await appNavigator.pushReplacement(
+                                          context,
+                                          (context) => const SignInView(),
+                                        );
                                       } catch (e) {
                                         setState(() {
                                           _userExists = true;
@@ -142,10 +156,12 @@ class _CreateFormState extends State<CreateForm> {
                                 )),
                             // Navigate to auth page`
                             TextButton(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(context, '/');
-                                },
-                                child: const Text('I already have an account'))
+                              onPressed: () async => await appNavigator.pushReplacement(
+                                context,
+                                (context) => const SignInView(),
+                              ),
+                              child: const Text('I already have an account'),
+                            ),
                           ],
                         ),
                       ),

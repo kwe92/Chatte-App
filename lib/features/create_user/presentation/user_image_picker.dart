@@ -32,7 +32,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
           radius: 40,
           backgroundImage: pickedImage == null ? null : FileImage(pickedImage!),
         ),
-        gaph4,
+        gapH4,
         TextButton.icon(
           onPressed: () async {
             final File? result = await _imagePicker();

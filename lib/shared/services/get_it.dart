@@ -2,6 +2,8 @@ import 'package:chatapp/app/navigation/app_navigator.dart';
 import 'package:chatapp/shared/services/chat_service.dart';
 import 'package:chatapp/shared/services/firebase_service.dart';
 import 'package:chatapp/shared/services/firestore_service.dart';
+import 'package:chatapp/shared/services/string_service.dart';
+import 'package:chatapp/shared/services/toast_service.dart';
 import 'package:chatapp/shared/services/user_service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,4 +15,6 @@ void configureDependencies() {
   locator.registerSingleton<AppNavigator>(AppNavigator());
   locator.registerSingleton<UserService>(UserService());
   locator.registerSingleton<ChatService>(ChatService());
+  locator.registerSingleton<StringService>(StringService());
+  locator.registerSingleton<ToastService>(ToastService());
 }

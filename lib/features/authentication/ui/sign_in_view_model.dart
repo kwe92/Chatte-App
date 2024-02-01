@@ -1,0 +1,72 @@
+import 'package:chatapp/shared/models/base_user.dart';
+import 'package:flutter/material.dart';
+import 'package:chatapp/shared/services/services.dart';
+
+class SignInViewModel extends ChangeNotifier {
+  SignInViewModel();
+
+  final formKey = GlobalKey<FormState>();
+
+  // Controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  bool _switchState = false;
+
+  String _email = '';
+
+  String _password = '';
+
+  bool get switchState => _switchState;
+
+  String get email => _email;
+
+  String get password => _password;
+
+  void setSwitchState(bool isSwitchedOn) {
+    _switchState = isSwitchedOn;
+    notifyListeners();
+  }
+
+  void setEmail(String email) {
+    _email = email.trim().toLowerCase();
+    debugPrint(_email);
+    notifyListeners();
+  }
+
+  void setPassword(String password) {
+    _password = password.trim();
+    debugPrint(_password);
+
+    notifyListeners();
+  }
+
+  Future<(BaseUser?, String?)> signInWithEmailAndPassword() async {
+    var error = await firebaseService.signInWithEmailAndPassword(email, password);
+
+    if (error == null) {
+      // currently logged in user data
+      final currentUser = await createCurrentUser();
+
+      return (currentUser, null);
+    }
+    return (null, error.toString());
+  }
+
+  Future<BaseUser> createCurrentUser() async {
+    final String userid = firebaseService.currentUser!.uid;
+
+    // Currently logged in user data
+    final currentUser = await userService.getCurrentUser('users', userid);
+
+    return currentUser;
+  }
+
+  void clearText() {
+    emailController.clear();
+    passwordController.clear();
+    setEmail('');
+    setPassword('');
+    notifyListeners();
+  }
+}
