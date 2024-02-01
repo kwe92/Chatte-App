@@ -4,11 +4,12 @@ import 'package:chatapp/shared/models/base_user.dart';
 import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // TODO: need to add get user method
 
 class UserService {
-  Future<String?> createUserInFirebase({
+  Future<(UserCredential?, String?)> createUserInFirebase({
     required String userName,
     required String password,
     required String email,
@@ -35,9 +36,9 @@ class UserService {
 
       await overrideUserData(colRef, user);
 
-      return null;
+      return (userCredentials, null);
     }
-    return error;
+    return (null, error);
   }
 
   // TODO: Refactor to return BaseUser with UserModel Instance
