@@ -28,7 +28,7 @@ class ChatScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Convertir'),
+          title: const Text('Chatte'),
           // option for user to logout
           actions: logoutButton(context: context),
         ),
