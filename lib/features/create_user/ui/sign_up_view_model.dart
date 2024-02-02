@@ -17,6 +17,14 @@ class SignUpViewModel extends ExtendedChangeNotifier {
 
   bool _isChecked = false;
 
+  String _email = '';
+
+  String _username = '';
+
+  String _password = '';
+
+  String _confirmPassword = '';
+
   File? _pickedImage;
 
   bool get isImagePicked => _isImagePicked;
@@ -24,6 +32,10 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   bool get isChecked => _isChecked;
 
   File? get pickedImage => _pickedImage;
+
+  bool get ready => _email.isNotEmpty && _username.isNotEmpty && _password.isNotEmpty;
+
+  bool get isMatchingPassword => _password == _confirmPassword;
 
   // callback for picking an image | UserImagePicker
   void _setPickedImage(File? pickedimage) {
@@ -43,8 +55,36 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     notifyListeners();
   }
 
+  void setEmail(String email) {
+    _email = email.trim().toLowerCase();
+    debugPrint(_email);
+    notifyListeners();
+  }
+
+  void setUsername(String username) {
+    _username = username.trim();
+    debugPrint(_username);
+
+    notifyListeners();
+  }
+
+  void setPassword(String password) {
+    _password = password.trim();
+    debugPrint(_password);
+
+    notifyListeners();
+  }
+
+  void setConfirmPassword(String confirmedPassword) {
+    _confirmPassword = confirmedPassword.trim();
+    debugPrint(_confirmPassword);
+
+    notifyListeners();
+  }
+
   Future<void> pickImage() async {
-    final File? result = await imagePickerService.pickImage();
+    final File? result = await runBusyFuture<File?>(() => imagePickerService.pickImage());
+
     _setPickedImage(result);
   }
 
@@ -56,9 +96,9 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     setBusy(true);
 
     final (userCredential, error) = await userService.createUserInFirebase(
-      userName: userNameController.text,
-      password: passwordController.text,
-      email: emailController.text,
+      userName: _username,
+      password: _password,
+      email: _email,
       file: pickedImage,
       colRef: colRef,
     );
