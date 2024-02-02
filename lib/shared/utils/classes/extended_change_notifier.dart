@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// TODO: implement busyFuture method
-
 class ExtendedChangeNotifier extends ChangeNotifier {
   bool _isBusy = false;
 
@@ -10,5 +8,13 @@ class ExtendedChangeNotifier extends ChangeNotifier {
   void setBusy(bool busy) {
     _isBusy = busy;
     notifyListeners();
+  }
+
+  Future<T> runBusyFuture<T>(Future<T> Function() busyFuture) async {
+    setBusy(true);
+    final T result = await busyFuture();
+    setBusy(false);
+
+    return result;
   }
 }
