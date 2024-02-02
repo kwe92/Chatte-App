@@ -43,3 +43,17 @@ const gapW44 = SizedBox(width: 44.0);
 const gapW46 = SizedBox(width: 46.0);
 const gapW48 = SizedBox(width: 48.0);
 const gapW50 = SizedBox(width: 50.0);
+
+const paddedIndicator = Positioned.fill(
+  child: Center(
+    child: Card(
+      elevation: 6,
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: CircularProgressIndicator(),
+      ),
+    ),
+  ),
+);
