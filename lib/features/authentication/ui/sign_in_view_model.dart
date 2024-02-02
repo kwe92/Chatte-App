@@ -41,7 +41,7 @@ class SignInViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<(BaseUser?, String?)> signInWithEmailAndPassword() async {
+  Future<(AbstractUser?, String?)> signInWithEmailAndPassword() async {
     var error = await firebaseService.signInWithEmailAndPassword(email, password);
 
     if (error == null) {
@@ -53,7 +53,7 @@ class SignInViewModel extends ChangeNotifier {
     return (null, error.toString());
   }
 
-  Future<BaseUser> createCurrentUser() async {
+  Future<AbstractUser> createCurrentUser() async {
     final String userid = firebaseService.currentUser!.uid;
 
     // Currently logged in user data

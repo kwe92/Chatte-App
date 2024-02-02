@@ -147,13 +147,13 @@ class SignUpView extends StatelessWidget {
 
                         if (Validator.trySubmit(model.formKey) && model.ready) {
                           if (!model.isMatchingPassword) {
-                            toastService.showSnackBar(context, 'passwords do not match');
+                            toastService.showSnackBar('passwords do not match');
 
                             return;
                           }
 
                           if (!model.isChecked) {
-                            toastService.showSnackBar(context, 'accept terms and conditions before proceeding');
+                            toastService.showSnackBar('accept terms and conditions before proceeding');
 
                             return;
                           }
@@ -161,30 +161,22 @@ class SignUpView extends StatelessWidget {
 
                           if (error != null) {
                             if (error.toString().contains('in use')) {
-                              toastService.showSnackBar(context, 'email address in use.');
+                              toastService.showSnackBar('email address in use.');
                               return;
                             }
-                            toastService.showSnackBar(context, 'there was an issue creating your account.');
+                            toastService.showSnackBar('there was an issue creating your account.');
 
                             return;
                           }
 
-                          await appNavigator.pushReplacement(
-                            context,
-                            (context) => ChatScreen(
-                              currentUser: currentUser!,
-                            ),
-                          );
+                          await appNavigator.pushReplacement(ChatScreen(currentUser: currentUser!));
                         }
                       },
                       child: const Text('Submit'),
                     ),
                     CustomTextButton(
                       padding: const EdgeInsets.symmetric(horizontal: 6),
-                      onPressed: () async => await appNavigator.pushReplacement(
-                        context,
-                        (context) => const SignInView(),
-                      ),
+                      onPressed: () async => await appNavigator.pushReplacement(const SignInView()),
                       child: const Text('I already have an account'),
                     ),
                     gapH30,

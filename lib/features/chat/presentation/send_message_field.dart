@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SendMessage extends StatefulWidget {
-  final BaseUser user;
+  final AbstractUser user;
 
   const SendMessage({required this.user, super.key});
 
@@ -57,7 +57,7 @@ class _SendMessageState extends State<SendMessage> {
                     messageController.clear();
                   }
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.send,
                   // color: Theme.of(context).primaryColor,
                 ),

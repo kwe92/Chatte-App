@@ -83,13 +83,19 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   }
 
   Future<void> pickImage() async {
-    final File? result = await runBusyFuture<File?>(() => imagePickerService.pickImage());
+    final (imageFile, didPickImage, error) = await runBusyFuture<(File?, bool, String?)>(() => imagePickerService.pickImage());
 
-    _setPickedImage(result);
+    if (error != null) {
+      toastService.showSnackBar("image maybe corrupted, please try another image.");
+    }
+
+    if (didPickImage && imageFile != null) {
+      _setPickedImage(imageFile);
+    }
   }
 
-  Future<(BaseUser?, String?)> createUserInFirebase() async {
-    BaseUser? currentUser;
+  Future<(AbstractUser?, String?)> createUserInFirebase() async {
+    AbstractUser? currentUser;
 
     final colRef = firestoreService.instance.collection('users');
 

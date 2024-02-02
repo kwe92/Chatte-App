@@ -6,10 +6,7 @@ List<Widget>? logoutButton({required BuildContext context}) => [
       Padding(
         padding: const EdgeInsets.only(right: 12.0),
         child: TextButton.icon(
-          onPressed: () async => await appNavigator.pushReplacement(
-            context,
-            (context) => const SignInView(),
-          ),
+          onPressed: () async => await appNavigator.pushReplacement(const SignInView()),
           icon: const Icon(Icons.menu),
           label: const Text(
             'Logout',

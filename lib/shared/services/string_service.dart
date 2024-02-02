@@ -30,25 +30,12 @@ class StringService {
     return null;
   }
 
-  // TODO: refactor
   String? passwordValidator(String? value) {
     if (value!.length < 7) {
       return 'Password must be at least 7 characters long.';
     }
     if (!value.contains(RegExp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))) {
-      return r"""
-
-Password Requirements:
-
-  At least one:
-    - digit
-    - lowercase character
-    - least uppercase character
-    - least special character
-  
-  - least 8 - 32 characters in length.
-
-""";
+      return 'Password requirements not meet.';
     }
     return null;
   }

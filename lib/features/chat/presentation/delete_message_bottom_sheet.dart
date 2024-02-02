@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,9 @@ Widget bottomSheet({required BuildContext context, required String messageid}) =
           builder: ((context, ref, child) => TextButton(
                 onPressed: () async {
                   final String path = ref.read(chatProvider.notifier).state;
+
                   await chatService.deleteMessage(id: messageid, path: path);
+
                   Navigator.pop(context);
                 },
                 child: const Text('Delete Message'),

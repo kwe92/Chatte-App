@@ -136,15 +136,12 @@ class SignInView extends StatelessWidget {
                                   var (currentUser, error) = await model.signInWithEmailAndPassword();
 
                                   if (error == null) {
-                                    await appNavigator.push(
-                                      context,
-                                      (context) => ChatScreen(currentUser: currentUser!),
-                                    );
+                                    await appNavigator.push(ChatScreen(currentUser: currentUser!));
 
                                     model.clearText();
                                     return;
                                   }
-                                  toastService.showSnackBar(context, "invalid username or password, please try again.");
+                                  toastService.showSnackBar("invalid username or password, please try again.");
                                 }
                               },
                               child: const Text('Login'),
@@ -161,10 +158,7 @@ class SignInView extends StatelessWidget {
                                   ),
                                 ),
                                 CustomTextButton(
-                                  onPressed: () => appNavigator.pushReplacement(
-                                    context,
-                                    (context) => const SignUpView(),
-                                  ),
+                                  onPressed: () => appNavigator.push(const SignUpView()),
                                   padding: const EdgeInsets.symmetric(horizontal: 6.0),
                                   child: const Text('Create Account'),
                                 ),

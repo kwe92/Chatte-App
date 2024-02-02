@@ -1,6 +1,6 @@
 import 'package:chatapp/shared/models/base_user.dart';
 
-class UserModel extends BaseUser {
+class UserModel extends AbstractUser {
   const UserModel({
     required super.id,
     required super.email,
@@ -27,6 +27,6 @@ class UserModel extends BaseUser {
 
   @override
   String toString() {
-    return 'User extends BaseUser(id: $id, password: $password, email: $email, username: $username, url: $url)';
+    return 'User extends AbstractUser(id: $id, password: $password, email: $email, username: $username, url: $url)';
   }
 }

@@ -10,7 +10,7 @@ class ChatService {
   }
 
   // Send a message by current user
-  void sendMessage(BaseUser user, String text, String path) {
+  void sendMessage(AbstractUser user, String text, String path) {
     final colRef = firestoreService.instance.collection(path);
     final textID = colRef.doc().id;
     MessageModel newMessage = MessageModel(

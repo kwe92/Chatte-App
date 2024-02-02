@@ -47,7 +47,6 @@ final InputDecorationTheme inputDecorationTheme = () {
     focusedErrorBorder: sharedInputBorder,
     errorBorder: sharedInputBorder,
     floatingLabelStyle: TextStyle(
-      // TODO: change to a darker grey
       color: AppColor.grey0,
     ),
   );

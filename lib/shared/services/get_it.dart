@@ -3,6 +3,7 @@ import 'package:chatapp/shared/services/chat_service.dart';
 import 'package:chatapp/shared/services/firebase_service.dart';
 import 'package:chatapp/shared/services/firestore_service.dart';
 import 'package:chatapp/shared/services/image_picker_service.dart';
+import 'package:chatapp/shared/services/key_service.dart';
 import 'package:chatapp/shared/services/string_service.dart';
 import 'package:chatapp/shared/services/toast_service.dart';
 import 'package:chatapp/shared/services/user_service.dart';
@@ -19,4 +20,5 @@ void configureDependencies() {
   locator.registerSingleton<StringService>(StringService());
   locator.registerSingleton<ToastService>(ToastService());
   locator.registerSingleton<ImagePickerService>(ImagePickerService());
+  locator.registerSingleton<KeyService>(KeyService());
 }

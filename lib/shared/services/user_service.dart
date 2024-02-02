@@ -6,8 +6,6 @@ import 'package:chatapp/shared/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// TODO: need to add get user method
-
 class UserService {
   Future<(UserCredential?, String?)> createUserInFirebase({
     required String userName,
@@ -26,7 +24,7 @@ class UserService {
 
       final storageRef = await firebaseService.uploadImageToStorage(userid, file);
 
-      final BaseUser user = UserModel(
+      final AbstractUser user = UserModel(
         id: userid,
         username: userName,
         password: password,
@@ -41,9 +39,8 @@ class UserService {
     return (null, error);
   }
 
-  // TODO: Refactor to return BaseUser with UserModel Instance
   // Retrieve a single user by id
-  Future<BaseUser> getCurrentUser(String collectionPath, String userid) async {
+  Future<AbstractUser> getCurrentUser(String collectionPath, String userid) async {
     // Get user by id
     final docSnapshot = await firebaseService.getUser(collectionPath: collectionPath, userid: userid);
 
@@ -57,7 +54,7 @@ class UserService {
 
   Future<void> overrideUserData(
     CollectionReference<Map<String, dynamic>> colRef,
-    BaseUser user,
+    AbstractUser user,
   ) async {
     final json = user.toJSON();
 
