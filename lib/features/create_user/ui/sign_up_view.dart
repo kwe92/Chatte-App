@@ -16,8 +16,6 @@ import 'package:chatapp/shared/widgets/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// TODO: implement confirm password
-
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
 
@@ -29,144 +27,172 @@ class SignUpView extends StatelessWidget {
         final model = Provider.of<SignUpViewModel>(context);
 
         return Scaffold(
-          body: model.isBusy
-              ? const CircularProgressIndicator.adaptive()
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 24,
-                      top: 56,
-                      right: 24,
-                    ),
-                    child: Column(
+          body: Padding(
+            padding: const EdgeInsets.only(
+              left: 24,
+              top: 52,
+              right: 24,
+            ),
+            child: Stack(
+              children: [
+                if (model.isBusy) paddedIndicator,
+                Column(
+                  children: [
+                    const Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              fit: FlexFit.loose,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Welcome to Chatte',
-                                    style: TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  gapH8,
-                                  Text(
-                                    'Sign up to join',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: AppColor.grey2,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  gapH32,
-                                ],
-                              ),
-                            ),
-                            Flexible(
-                              fit: FlexFit.loose,
-                              child: UserImageSection(),
-                            ),
-                          ],
-                        ),
-                        Form(
-                          key: model.formKey,
+                        Flexible(
+                          flex: 2,
+                          fit: FlexFit.loose,
                           child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              // Error message if an image is not picked
-                              !model.isImagePicked
-                                  ? const Text(
-                                      'image required',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                              BaseFormFields(
-                                // TODO: use mutable variables instead of controllers to handle text form field using onChanged
-                                formFieldParameters: FormFieldParameters(
-                                  userNameController: model.userNameController,
-                                  passwordController: model.passwordController,
-                                  emailController: model.emailController,
-                                ),
-                                formFieldValidators: FormFieldValidators(
-                                  emailValidator: stringService.emptyEmailValidator,
-                                  userNameValidator: stringService.userNameValidator,
-                                  passwordValidator: stringService.passwordValidator,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome to Chatte',
+                                style: TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w800,
                                 ),
                               ),
-                              gapH16,
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 24,
-                                    width: 24,
-                                    margin: const EdgeInsets.only(right: 6),
-                                    child: Checkbox(
-                                      value: model.isChecked,
-                                      onChanged: model.setIsChecked,
-                                    ),
-                                  ),
-                                  const Text("I agree to the:"),
-                                  CustomTextButton(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                                    onPressed: () {},
-                                    child: const Text("Terms of Service"),
-                                  )
-                                ],
-                              ),
-                              gapH12,
-
-                              MainButton(
-                                onPressed: () async {
-                                  if (model.pickedImage == null) {
-                                    model.setIsImagePicked(false);
-                                    return;
-                                  }
-
-                                  if (Validator.trySubmit(model.formKey)) {
-                                    final (currentUser, error) = await model.createUserInFirebase();
-
-                                    if (error != null) {
-                                      toastService.showSnackBar(context, error.toString());
-                                      return;
-                                    }
-
-                                    await appNavigator.pushReplacement(
-                                      context,
-                                      (context) => ChatScreen(
-                                        currentUser: currentUser!,
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: const Text('Submit'),
-                              ),
-                              gapH12,
-                              CustomTextButton(
-                                padding: const EdgeInsets.symmetric(horizontal: 6),
-                                onPressed: () async => await appNavigator.pushReplacement(
-                                  context,
-                                  (context) => const SignInView(),
+                              gapH8,
+                              Text(
+                                'Sign up to join',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppColor.grey2,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                child: const Text('I already have an account'),
                               ),
+                              // gapH32,
                             ],
                           ),
                         ),
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: UserImageSection(),
+                        ),
                       ],
                     ),
-                  ),
+                    gapH16,
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.all(0),
+                        children: [
+                          Form(
+                            key: model.formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                // Error message if an image is not picked
+                                !model.isImagePicked
+                                    ? const Text(
+                                        'image required',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                                BaseFormFields(
+                                  showConfirmPasswordField: true,
+                                  formFieldParameters: FormFieldParameters(
+                                    userNameController: model.userNameController,
+                                    passwordController: model.passwordController,
+                                    emailController: model.emailController,
+                                    setEmail: model.setEmail,
+                                    setPassword: model.setPassword,
+                                    setUsername: model.setUsername,
+                                    setConfirmPassword: model.setConfirmPassword,
+                                  ),
+                                  formFieldValidators: FormFieldValidators(
+                                    emailValidator: stringService.emptyEmailValidator,
+                                    userNameValidator: stringService.userNameValidator,
+                                    passwordValidator: stringService.passwordValidator,
+                                  ),
+                                ),
+                                // gapH16,
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          height: 24,
+                          width: 24,
+                          margin: const EdgeInsets.only(right: 6),
+                          child: Checkbox(
+                            value: model.isChecked,
+                            onChanged: model.setIsChecked,
+                          ),
+                        ),
+                        const Text("I agree to the:"),
+                        CustomTextButton(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          onPressed: () {},
+                          child: const Text("Terms of Service"),
+                        )
+                      ],
+                    ),
+                    gapH8,
+                    MainButton(
+                      onPressed: () async {
+                        if (model.pickedImage == null) {
+                          model.setIsImagePicked(false);
+                          return;
+                        }
+
+                        if (Validator.trySubmit(model.formKey) && model.ready) {
+                          if (!model.isMatchingPassword) {
+                            toastService.showSnackBar(context, 'passwords do not match');
+
+                            return;
+                          }
+
+                          if (!model.isChecked) {
+                            toastService.showSnackBar(context, 'accept terms and conditions before proceeding');
+
+                            return;
+                          }
+                          final (currentUser, error) = await model.createUserInFirebase();
+
+                          if (error != null) {
+                            if (error.toString().contains('in use')) {
+                              toastService.showSnackBar(context, 'email address in use.');
+                              return;
+                            }
+                            toastService.showSnackBar(context, 'there was an issue creating your account.');
+
+                            return;
+                          }
+
+                          await appNavigator.pushReplacement(
+                            context,
+                            (context) => ChatScreen(
+                              currentUser: currentUser!,
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Submit'),
+                    ),
+                    CustomTextButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      onPressed: () async => await appNavigator.pushReplacement(
+                        context,
+                        (context) => const SignInView(),
+                      ),
+                      child: const Text('I already have an account'),
+                    ),
+                    gapH30,
+                  ],
                 ),
+              ],
+            ),
+          ),
         );
       },
     );
