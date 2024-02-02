@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 
 class BaseFormFields extends StatelessWidget {
   final bool showUserNameField;
+  final bool showConfirmPasswordField;
   final FormFieldParameters formFieldParameters;
   final FormFieldValidators formFieldValidators;
 
   const BaseFormFields({
-    this.showUserNameField = true,
     required this.formFieldParameters,
     required this.formFieldValidators,
+    this.showUserNameField = true,
+    this.showConfirmPasswordField = false,
     super.key,
   });
 
@@ -58,6 +60,7 @@ class BaseFormFields extends StatelessWidget {
           TextFormField(
             controller: formFieldParameters.userNameController,
             keyboardType: TextInputType.text,
+            onChanged: formFieldParameters.setUsername,
             decoration: const InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
               labelText: "Username",
@@ -86,7 +89,24 @@ class BaseFormFields extends StatelessWidget {
           ),
           // Password field validator
           validator: formFieldValidators.passwordValidator,
-        )
+        ),
+        // Password field
+        if (showConfirmPasswordField) ...[
+          gapH12,
+          TextFormField(
+            controller: formFieldParameters.conFirmPasswordController,
+            onChanged: formFieldParameters.setConfirmPassword,
+            obscureText: true,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              labelText: "Confirm Password",
+              hintText: "Confirm Password",
+            ),
+            // Password field validator
+            validator: formFieldValidators.passwordValidator,
+          ),
+        ]
       ],
     );
   }
