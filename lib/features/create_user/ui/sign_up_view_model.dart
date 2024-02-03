@@ -94,7 +94,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     }
   }
 
-  Future<(AbstractUser?, String?)> createUserInFirebase() async {
+  Future<AbstractUser?> createUserInFirebase() async {
     AbstractUser? currentUser;
 
     final colRef = firestoreService.instance.collection('users');
@@ -109,6 +109,17 @@ class SignUpViewModel extends ExtendedChangeNotifier {
       colRef: colRef,
     );
 
+    if (error != null) {
+      setBusy(false);
+
+      if (error.toString().contains('in use')) {
+        toastService.showSnackBar('email address in use.');
+        return null;
+      }
+      toastService.showSnackBar('there was an issue creating your account.');
+      return null;
+    }
+
     if (userCredential != null) {
       currentUser = await userService.getCurrentUser(
         'users',
@@ -118,6 +129,30 @@ class SignUpViewModel extends ExtendedChangeNotifier {
 
     setBusy(false);
 
-    return (currentUser, error);
+    return currentUser;
+  }
+
+  bool isReadyToSignUp() {
+    if (pickedImage == null) {
+      setIsImagePicked(false);
+      return false;
+    }
+
+    if (!isMatchingPassword) {
+      toastService.showSnackBar('passwords do not match');
+      return false;
+    }
+
+    if (!isChecked) {
+      toastService.showSnackBar('accept terms and conditions before proceeding');
+
+      return false;
+    }
+
+    if (!ready) {
+      toastService.showSnackBar('please fill out all required fields.');
+    }
+
+    return true;
   }
 }

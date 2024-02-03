@@ -140,36 +140,12 @@ class SignUpView extends StatelessWidget {
                     gapH8,
                     MainButton(
                       onPressed: () async {
-                        if (model.pickedImage == null) {
-                          model.setIsImagePicked(false);
-                          return;
-                        }
+                        if (Validator.trySubmit(model.formKey) && model.isReadyToSignUp()) {
+                          final currentUser = await model.createUserInFirebase();
 
-                        if (Validator.trySubmit(model.formKey) && model.ready) {
-                          if (!model.isMatchingPassword) {
-                            toastService.showSnackBar('passwords do not match');
-
-                            return;
+                          if (currentUser != null) {
+                            await appNavigator.pushReplacement(ChatScreen(currentUser: currentUser));
                           }
-
-                          if (!model.isChecked) {
-                            toastService.showSnackBar('accept terms and conditions before proceeding');
-
-                            return;
-                          }
-                          final (currentUser, error) = await model.createUserInFirebase();
-
-                          if (error != null) {
-                            if (error.toString().contains('in use')) {
-                              toastService.showSnackBar('email address in use.');
-                              return;
-                            }
-                            toastService.showSnackBar('there was an issue creating your account.');
-
-                            return;
-                          }
-
-                          await appNavigator.pushReplacement(ChatScreen(currentUser: currentUser!));
                         }
                       },
                       child: const Text('Submit'),

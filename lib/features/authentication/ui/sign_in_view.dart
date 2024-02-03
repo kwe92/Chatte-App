@@ -133,15 +133,12 @@ class SignInView extends StatelessWidget {
                             MainButton(
                               onPressed: () async {
                                 if (Validator.trySubmit(model.formKey)) {
-                                  var (currentUser, error) = await model.signInWithEmailAndPassword();
+                                  final currentUser = await model.signInWithEmailAndPassword();
 
-                                  if (error == null) {
-                                    await appNavigator.push(ChatScreen(currentUser: currentUser!));
-
+                                  if (currentUser != null) {
+                                    await appNavigator.push(ChatScreen(currentUser: currentUser));
                                     model.clearText();
-                                    return;
                                   }
-                                  toastService.showSnackBar("invalid username or password, please try again.");
                                 }
                               },
                               child: const Text('Login'),
