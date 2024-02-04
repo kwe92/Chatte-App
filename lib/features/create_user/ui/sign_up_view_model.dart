@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chatapp/shared/models/base_user.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/extended_change_notifier.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpViewModel extends ExtendedChangeNotifier {
@@ -24,6 +25,8 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   String _password = '';
 
   String _confirmPassword = '';
+
+  AbstractUser? _currentUser;
 
   File? _pickedImage;
 
@@ -95,41 +98,70 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   }
 
   Future<AbstractUser?> createUserInFirebase() async {
-    AbstractUser? currentUser;
+    try {
+      doesUserNameExist();
 
-    final colRef = firestoreService.instance.collection('users');
+      final colRef = firestoreService.instance.collection('users');
 
-    setBusy(true);
+      setBusy(true);
 
-    final (userCredential, error) = await userService.createUserInFirebase(
-      userName: _username,
-      password: _password,
-      email: _email,
-      file: pickedImage,
-      colRef: colRef,
-    );
+      final (userCredential, error) = await userService.createUserInFirebase(
+        userName: _username,
+        password: _password,
+        email: _email,
+        file: pickedImage,
+        colRef: colRef,
+      );
 
-    if (error != null) {
+      checkError(error);
+
+      await setCurrentUser(userCredential);
+
+      await userService.closeUserNameListener();
+
       setBusy(false);
 
-      if (error.toString().contains('in use')) {
-        toastService.showSnackBar('email address in use.');
-        return null;
-      }
-      toastService.showSnackBar('there was an issue creating your account.');
+      return _currentUser;
+    } catch (exception) {
+      debugPrint(exception.toString());
+      setBusy(false);
       return null;
     }
+  }
 
+  void doesUserNameExist() {
+    final bool userNameExists = userService.userNames.contains(_username.toLowerCase());
+
+    debugPrint('userNameExists: $userNameExists');
+
+    if (userNameExists) {
+      toastService.showSnackBar('user name taken.');
+      throw Exception('user name taken.');
+    }
+  }
+
+  setCurrentUser(UserCredential? userCredential) async {
     if (userCredential != null) {
-      currentUser = await userService.getCurrentUser(
+      _currentUser = await userService.getCurrentUser(
         'users',
         userCredential.user!.uid,
       );
+
+      debugPrint('currentUser: $_currentUser');
+    } else {
+      throw Exception('there was an issue during account creation.');
     }
+  }
 
-    setBusy(false);
-
-    return currentUser;
+  void checkError(String? error) {
+    if (error != null) {
+      if (error.toString().contains('in use')) {
+        toastService.showSnackBar('email address in use.');
+        throw Exception('email address in use.');
+      }
+      toastService.showSnackBar('there was an issue creating your account.');
+      throw Exception('there was an issue during account creation.');
+    }
   }
 
   bool isReadyToSignUp() {
