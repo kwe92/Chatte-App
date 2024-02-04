@@ -11,6 +11,8 @@ void main() async {
   await Firebase.initializeApp();
   configureDependencies();
 
+  userService.userNameListener();
+
   runApp(
     const MyApp(),
   );
