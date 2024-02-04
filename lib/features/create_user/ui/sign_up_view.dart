@@ -3,7 +3,7 @@
 import 'package:chatapp/app/resources/reusables.dart';
 import 'package:chatapp/app/theme/colors.dart';
 import 'package:chatapp/features/authentication/ui/sign_in_view.dart';
-import 'package:chatapp/features/chat/presentation/chat_screen.dart';
+import 'package:chatapp/features/chat/ui/chat_view.dart';
 import 'package:chatapp/features/create_user/ui/sign_up_view_model.dart';
 import 'package:chatapp/features/create_user/ui/widgets/user_image_section.dart';
 import 'package:chatapp/app/utils/validator.dart';

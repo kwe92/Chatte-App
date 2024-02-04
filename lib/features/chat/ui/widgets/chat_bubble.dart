@@ -1,6 +1,6 @@
 import 'package:chatapp/app/resources/reusables.dart';
+import 'package:chatapp/features/chat/ui/widgets/delete_message_bottom_sheet.dart';
 import 'package:chatapp/shared/models/message.dart';
-import 'package:chatapp/features/chat/presentation/delete_message_bottom_sheet.dart';
 import 'package:chatapp/shared/models/user.dart';
 import 'package:flutter/material.dart';
 

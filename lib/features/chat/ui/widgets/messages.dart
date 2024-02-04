@@ -1,6 +1,6 @@
+import 'package:chatapp/features/chat/ui/widgets/chat_bubble.dart';
 import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/shared/models/user_message.dart';
-import 'package:chatapp/features/chat/presentation/chat_bubble.dart';
 import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/shared/services/services.dart';

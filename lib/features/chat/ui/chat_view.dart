@@ -1,6 +1,6 @@
-import 'package:chatapp/features/chat/presentation/logout_button.dart';
-import 'package:chatapp/features/chat/presentation/messages.dart';
-import 'package:chatapp/features/chat/presentation/send_message_field.dart';
+import 'package:chatapp/features/chat/ui/widgets/logout_button.dart';
+import 'package:chatapp/features/chat/ui/widgets/messages.dart';
+import 'package:chatapp/features/chat/ui/widgets/send_message_field.dart';
 import 'package:chatapp/shared/models/user.dart';
 import 'package:flutter/material.dart';
 

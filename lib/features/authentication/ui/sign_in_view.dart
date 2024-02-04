@@ -6,7 +6,7 @@ import 'package:chatapp/app/utils/validator.dart';
 import 'package:chatapp/features/authentication/ui/widgets/custom_switch.dart';
 import 'package:chatapp/features/authentication/ui/widgets/horizontal_line.dart';
 import 'package:chatapp/features/authentication/ui/widgets/social_media_icon_button.dart';
-import 'package:chatapp/features/chat/presentation/chat_screen.dart';
+import 'package:chatapp/features/chat/ui/chat_view.dart';
 import 'package:chatapp/features/create_user/ui/sign_up_view.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
