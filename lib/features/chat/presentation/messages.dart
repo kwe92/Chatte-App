@@ -1,13 +1,14 @@
-import 'package:chatapp/features/chat/domain/message_model.dart';
+import 'package:chatapp/shared/models/message.dart';
+import 'package:chatapp/shared/models/user_message.dart';
 import 'package:chatapp/features/chat/presentation/chat_bubble.dart';
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Messages extends ConsumerWidget {
-  final AbstractUser user;
+  final User user;
 
   const Messages({required this.user, super.key});
 
@@ -34,7 +35,7 @@ class Messages extends ConsumerWidget {
         }
 
         // Dynamic list of message models
-        final List<MessageModel> msgModels = [for (var msg in snapshot.data!) MessageModel.fromJSON(msg)];
+        final List<Message> msgModels = [for (var msg in snapshot.data!) UserMessage.fromJSON(msg)];
 
         return ListView.builder(
           reverse: true,

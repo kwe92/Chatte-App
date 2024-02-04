@@ -1,12 +1,12 @@
 import 'package:chatapp/app/resources/reusables.dart';
-import 'package:chatapp/features/chat/domain/message_model.dart';
+import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/features/chat/presentation/delete_message_bottom_sheet.dart';
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
-  final AbstractUser currentUser;
-  final MessageModel message;
+  final User currentUser;
+  final Message message;
 
   const ChatBubble({
     required this.currentUser,
@@ -74,14 +74,14 @@ class ChatBubble extends StatelessWidget {
 TextStyle _style(
         {double fontSize = 18.0,
         FontWeight? weight = FontWeight.bold,
-        required AbstractUser currentUser,
-        required MessageModel message,
+        required User currentUser,
+        required Message message,
         required context}) =>
     currentUser.id == message.userid
         ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
         : TextStyle(fontSize: fontSize, color: Theme.of(context).primaryColor, fontWeight: weight);
 
-Widget _nameTextBubble(BuildContext context, AbstractUser currentUser, MessageModel message) => Container(
+Widget _nameTextBubble(BuildContext context, User currentUser, Message message) => Container(
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(

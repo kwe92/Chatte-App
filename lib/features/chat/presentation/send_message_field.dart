@@ -1,4 +1,4 @@
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/app/utils/validator.dart';
 import 'package:chatapp/shared/services/services.dart';
@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SendMessage extends StatefulWidget {
-  final AbstractUser user;
+  final User user;
 
   const SendMessage({required this.user, super.key});
 

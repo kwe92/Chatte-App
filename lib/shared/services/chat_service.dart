@@ -1,5 +1,6 @@
-import 'package:chatapp/features/chat/domain/message_model.dart';
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/message.dart';
+import 'package:chatapp/shared/models/user_message.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/shared/services/services.dart';
 
 class ChatService {
@@ -10,10 +11,10 @@ class ChatService {
   }
 
   // Send a message by current user
-  void sendMessage(AbstractUser user, String text, String path) {
+  void sendMessage(User user, String text, String path) {
     final colRef = firestoreService.instance.collection(path);
     final textID = colRef.doc().id;
-    MessageModel newMessage = MessageModel(
+    Message newMessage = UserMessage(
       userid: user.id,
       username: user.username,
       userImageUrl: user.url,

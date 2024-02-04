@@ -1,23 +1,19 @@
+import 'package:chatapp/shared/models/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// TODO: create base model
+class UserMessage extends Message {
+  @override
+  Timestamp get timeStamp => Timestamp.now();
 
-class MessageModel {
-  final String userid;
-  final String username;
-  final String userImageUrl;
-  final String textID;
-  final String text;
-  Timestamp get _timeStamp => Timestamp.now();
-
-  const MessageModel({
-    required this.userid,
-    required this.username,
-    required this.userImageUrl,
-    required this.textID,
-    required this.text,
+  const UserMessage({
+    required super.userid,
+    required super.username,
+    required super.userImageUrl,
+    required super.textID,
+    required super.text,
   });
 
+  @override
   Map<String, dynamic> toJSON() {
     return {
       'username': username,
@@ -25,13 +21,13 @@ class MessageModel {
       'userimage': userImageUrl,
       'textid': textID,
       'text': text.trim(),
-      'timestamp': _timeStamp,
+      'timestamp': timeStamp,
     };
   }
 
-  /// Create a [MessageModel] from a json object
-  factory MessageModel.fromJSON(Map<String, dynamic> json) {
-    return MessageModel(
+  /// Create a [UserMessage] from a json object
+  factory UserMessage.fromJSON(Map<String, dynamic> json) {
+    return UserMessage(
       username: json['username'],
       userid: json['userid'],
       userImageUrl: json['userimage'],
@@ -42,14 +38,14 @@ class MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(userid: $userid, username: $username, userImageUrl: $userImageUrl, textID: $textID, text: $text)';
+    return 'UserMessage(userid: $userid, username: $username, userImageUrl: $userImageUrl, textID: $textID, text: $text)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is MessageModel &&
+    return other is UserMessage &&
         other.userid == userid &&
         other.username == username &&
         other.userImageUrl == userImageUrl &&

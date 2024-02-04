@@ -1,4 +1,4 @@
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp/shared/services/services.dart';
 
@@ -41,7 +41,7 @@ class SignInViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<AbstractUser?> signInWithEmailAndPassword() async {
+  Future<User?> signInWithEmailAndPassword() async {
     var error = await firebaseService.signInWithEmailAndPassword(email, password);
 
     if (error == null) {
@@ -56,7 +56,7 @@ class SignInViewModel extends ChangeNotifier {
     return null;
   }
 
-  Future<AbstractUser> createCurrentUser() async {
+  Future<User> createCurrentUser() async {
     final String userid = firebaseService.currentUser!.uid;
 
     // Currently logged in user data
