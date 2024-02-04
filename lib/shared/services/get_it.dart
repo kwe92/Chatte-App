@@ -1,4 +1,5 @@
 import 'package:chatapp/app/navigation/app_navigator.dart';
+import 'package:chatapp/shared/controllers/password_visiblity_controller.dart';
 import 'package:chatapp/shared/services/chat_service.dart';
 import 'package:chatapp/shared/services/firebase_service.dart';
 import 'package:chatapp/shared/services/firestore_service.dart';
@@ -21,4 +22,5 @@ void configureDependencies() {
   locator.registerSingleton<ToastService>(ToastService());
   locator.registerSingleton<ImagePickerService>(ImagePickerService());
   locator.registerSingleton<KeyService>(KeyService());
+  locator.registerSingleton<PasswordVisibilityController>(PasswordVisibilityController());
 }

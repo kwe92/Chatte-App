@@ -1,8 +1,12 @@
 import 'package:chatapp/app/resources/reusables.dart';
 import 'package:chatapp/app/theme/colors.dart';
+import 'package:chatapp/shared/controllers/password_visiblity_controller.dart';
+import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/form_field_parameters.dart';
 import 'package:chatapp/shared/utils/classes/form_field_validators.dart';
+import 'package:chatapp/shared/widgets/visibility_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BaseFormFields extends StatelessWidget {
   final bool showUserNameField;
@@ -77,36 +81,56 @@ class BaseFormFields extends StatelessWidget {
         ),
         gapH12,
         // Password field
-        TextFormField(
-          controller: formFieldParameters.passwordController,
-          onChanged: formFieldParameters.setPassword,
-          obscureText: true,
-          keyboardType: TextInputType.text,
-          decoration: const InputDecoration(
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            labelText: "Password",
-            hintText: "Enter Password",
-          ),
-          // Password field validator
-          validator: formFieldValidators.passwordValidator,
-        ),
-        // Password field
-        if (showConfirmPasswordField) ...[
-          gapH12,
-          TextFormField(
-            controller: formFieldParameters.conFirmPasswordController,
-            onChanged: formFieldParameters.setConfirmPassword,
-            obscureText: true,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              labelText: "Confirm Password",
-              hintText: "Confirm Password",
-            ),
-            // Password field validator
-            validator: formFieldValidators.confirmPasswordValidator,
-          ),
-        ]
+        ...[
+          ChangeNotifierProvider.value(
+            value: passwordVisibilityController,
+            builder: (context, _) {
+              final bool isObscured = context.watch<PasswordVisibilityController>().isObscured;
+              return Column(
+                children: [
+                  TextFormField(
+                    controller: formFieldParameters.passwordController,
+                    onChanged: formFieldParameters.setPassword,
+                    obscureText: passwordVisibilityController.isObscured,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelText: "Password",
+                      hintText: "Enter Password",
+                      suffixIcon: VisibilityIcon(
+                        isObscured: isObscured,
+                        setObscurity: passwordVisibilityController.setIsObscured,
+                      ),
+                    ),
+                    // Password field validator
+                    validator: formFieldValidators.passwordValidator,
+                  ),
+                  // Password field
+                  if (showConfirmPasswordField) ...[
+                    gapH12,
+                    TextFormField(
+                      controller: formFieldParameters.conFirmPasswordController,
+                      onChanged: formFieldParameters.setConfirmPassword,
+                      obscureText: passwordVisibilityController.isObscured,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelText: "Confirm Password",
+                        hintText: "Confirm Password",
+                        suffixIcon: VisibilityIcon(
+                          isObscured: isObscured,
+                          setObscurity: passwordVisibilityController.setIsObscured,
+                        ),
+                      ),
+                      // Password field validator
+                      validator: formFieldValidators.confirmPasswordValidator,
+                    ),
+                  ],
+                ],
+              );
+            },
+          )
+        ],
       ],
     );
   }
