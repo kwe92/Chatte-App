@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chatapp/shared/models/base_user.dart';
@@ -5,8 +6,15 @@ import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class UserService {
+class UserService extends ChangeNotifier {
+  List<dynamic> _userNames = [];
+
+  List<dynamic> get userNames => _userNames;
+
+  late StreamSubscription _usersStreamSub;
+
   Future<(UserCredential?, String?)> createUserInFirebase({
     required String userName,
     required String password,
@@ -59,5 +67,25 @@ class UserService {
     final json = user.toJSON();
 
     await colRef.doc(user.id).set(json);
+  }
+
+  void userNameListener() {
+    final usersStream = firestoreService.getAllDocuments(collectionPath: 'users');
+
+    _usersStreamSub = usersStream.listen(
+      (users) {
+        _userNames = users.map((user) => user['username'].toLowerCase()).toList();
+
+        debugPrint('userNames: $_userNames');
+        notifyListeners();
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> closeUserNameListener() async {
+    await _usersStreamSub.cancel();
+    debugPrint('stream subscription in getUserNames closed successfully!');
   }
 }
