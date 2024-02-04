@@ -5,7 +5,7 @@ import 'package:chatapp/shared/models/base_user.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
-  final BaseUser currentUser;
+  final AbstractUser currentUser;
   final MessageModel message;
 
   const ChatBubble({
@@ -74,14 +74,14 @@ class ChatBubble extends StatelessWidget {
 TextStyle _style(
         {double fontSize = 18.0,
         FontWeight? weight = FontWeight.bold,
-        required BaseUser currentUser,
+        required AbstractUser currentUser,
         required MessageModel message,
         required context}) =>
     currentUser.id == message.userid
         ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
         : TextStyle(fontSize: fontSize, color: Theme.of(context).primaryColor, fontWeight: weight);
 
-Widget _nameTextBubble(BuildContext context, BaseUser currentUser, MessageModel message) => Container(
+Widget _nameTextBubble(BuildContext context, AbstractUser currentUser, MessageModel message) => Container(
       padding: const EdgeInsets.all(24),
       margin: const EdgeInsets.only(top: 20),
       decoration: BoxDecoration(

@@ -41,19 +41,22 @@ class SignInViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<(BaseUser?, String?)> signInWithEmailAndPassword() async {
+  Future<AbstractUser?> signInWithEmailAndPassword() async {
     var error = await firebaseService.signInWithEmailAndPassword(email, password);
 
     if (error == null) {
       // currently logged in user data
       final currentUser = await createCurrentUser();
 
-      return (currentUser, null);
+      return currentUser;
     }
-    return (null, error.toString());
+
+    toastService.showSnackBar("Invalid username or password, please try again.");
+
+    return null;
   }
 
-  Future<BaseUser> createCurrentUser() async {
+  Future<AbstractUser> createCurrentUser() async {
     final String userid = firebaseService.currentUser!.uid;
 
     // Currently logged in user data

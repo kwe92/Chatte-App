@@ -22,7 +22,7 @@ class UserImageSection extends StatelessWidget {
           top: 50,
           left: 50,
           child: GestureDetector(
-            onTap: () async => model.pickImage(),
+            onTap: () async => await model.pickImage(),
             child: Container(
               height: side,
               width: side,

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Messages extends ConsumerWidget {
-  final BaseUser user;
+  final AbstractUser user;
 
   const Messages({required this.user, super.key});
 
@@ -15,7 +15,10 @@ class Messages extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return StreamBuilder(
       // Generate a list of all messages in the Firestore instance
-      stream: firestoreService.getListDocsData(collectionPath: ref.read(chatProvider.notifier).state, orderBy: 'timestamp'),
+      stream: firestoreService.getAllDocuments(
+        collectionPath: ref.read(chatProvider.notifier).state,
+        orderBy: 'timestamp',
+      ),
       builder: ((context, snapshot) {
         // Loading page
         if (snapshot.connectionState == ConnectionState.waiting) {

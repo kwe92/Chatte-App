@@ -1,7 +1,5 @@
-// TODO rename to AbstractUser
-
-abstract class BaseUser {
-  const BaseUser({
+abstract class AbstractUser {
+  const AbstractUser({
     required this.id,
     required this.email,
     required this.password,
