@@ -106,10 +106,10 @@ class SignUpView extends StatelessWidget {
                                     setConfirmPassword: model.setConfirmPassword,
                                   ),
                                   formFieldValidators: FormFieldValidators(
-                                    emailValidator: stringService.emptyEmailValidator,
-                                    userNameValidator: stringService.userNameValidator,
-                                    passwordValidator: stringService.passwordValidator,
-                                  ),
+                                      emailValidator: stringService.emptyEmailValidator,
+                                      userNameValidator: stringService.userNameValidator,
+                                      passwordValidator: stringService.passwordValidator,
+                                      confirmPasswordValidator: (value) => _confirmPasswordValidator(value, model)),
                                 ),
                                 // gapH16,
                               ],
@@ -165,4 +165,14 @@ class SignUpView extends StatelessWidget {
       },
     );
   }
+}
+
+String? _confirmPasswordValidator(String? value, SignUpViewModel model) {
+  if (value == null || value.isEmpty) {
+    return 'can not be empty.';
+  }
+  if (!model.isMatchingPassword) {
+    return 'passwords do not match.';
+  }
+  return null;
 }

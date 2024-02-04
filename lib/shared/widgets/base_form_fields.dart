@@ -104,7 +104,7 @@ class BaseFormFields extends StatelessWidget {
               hintText: "Confirm Password",
             ),
             // Password field validator
-            validator: formFieldValidators.passwordValidator,
+            validator: formFieldValidators.confirmPasswordValidator,
           ),
         ]
       ],
