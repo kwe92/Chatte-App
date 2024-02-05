@@ -1,69 +1,70 @@
+import 'package:chatapp/app/theme/colors.dart';
+import 'package:chatapp/features/chat/ui/chat_view_model.dart';
 import 'package:chatapp/shared/models/user.dart';
-import 'package:chatapp/app/providers/chats_provider.dart';
 import 'package:chatapp/app/utils/validator.dart';
-import 'package:chatapp/shared/services/services.dart';
+import 'package:chatapp/shared/widgets/circle_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
-class SendMessage extends StatefulWidget {
+class SendMessage extends StatelessWidget {
   final User user;
 
   const SendMessage({required this.user, super.key});
 
   @override
-  State<SendMessage> createState() => _SendMessageState();
-}
-
-class _SendMessageState extends State<SendMessage> {
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController messageController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
+    final ChatViewModel model = context.read<ChatViewModel>();
+
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       padding: const EdgeInsets.all(8.0),
-      child: Row(children: <Widget>[
-        //Typing field
-        Expanded(
-          child: Form(
-            key: _formKey,
-            child: TextFormField(
-              controller: messageController,
-              // Validators
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Messsage can't be empty";
-                }
-                if (value.length > 150) {
-                  return "Needs to be less than 150 characters";
-                }
-                return null;
-              },
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(labelText: 'Send a message'),
+      child: Row(
+        children: [
+          //Typing field
+          Expanded(
+            child: Form(
+              key: model.formKey,
+              child: TextFormField(
+                controller: model.messageController,
+                onChanged: model.setMessage,
+                // Validators
+                validator: _messageValidator,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: "Type a message here...",
+                  prefixIcon: IconButton(
+                    onPressed: () {
+                      // TODO: implement camera functionality
+                    },
+                    icon: const Icon(Icons.camera_alt_outlined),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-        Consumer(
-          builder: ((context, ref, _) => IconButton(
-                onPressed: () {
-                  // If validation passes send message
-                  if (Validator.trySubmit(_formKey)) {
-                    final collectionPath = ref.read(chatProvider.notifier).state;
-                    final newMsg = messageController.text;
-                    chatService.sendMessage(widget.user, newMsg, collectionPath);
-                    // debugPrint(newMsg);
-                    messageController.clear();
-                  }
-                },
-                icon: const Icon(
-                  Icons.send,
-                  // color: Theme.of(context).primaryColor,
-                ),
-              )),
-        )
-      ]),
+          IconButton(
+            onPressed: () => Validator.trySubmit(model.formKey) ? model.sendMessage(user) : null,
+            icon: const CircleWidget(
+              size: 42,
+              backgroundColor: AppColor.primaryThemeColor,
+              child: Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
+}
+
+String? _messageValidator(String? value) {
+  if (value!.trim().isEmpty) {
+    return "can not be empty";
+  }
+  if (value.length > 150) {
+    return "less than 150 characters required";
+  }
+  return null;
 }
