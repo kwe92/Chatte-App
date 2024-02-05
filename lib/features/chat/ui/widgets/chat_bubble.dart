@@ -1,4 +1,5 @@
 import 'package:chatapp/app/resources/reusables.dart';
+import 'package:chatapp/app/theme/colors.dart';
 import 'package:chatapp/features/chat/ui/widgets/delete_message_bottom_sheet.dart';
 import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/shared/models/user.dart';
@@ -16,8 +17,6 @@ class ChatBubble extends StatelessWidget {
 
   static const double _radius = 21;
 
-// Styling for user text and user name
-
   @override
   Widget build(BuildContext context) {
     // Chat Bubble Start
@@ -25,10 +24,9 @@ class ChatBubble extends StatelessWidget {
       // Aligns text given current user
       mainAxisAlignment: currentUser.id == message.userid ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        // TODO: Refactor
         Expanded(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               currentUser.id != message.userid
                   ? CircleAvatar(
@@ -52,11 +50,29 @@ class ChatBubble extends StatelessWidget {
                           }
                       : null,
                   //Chat bubble container
-                  child: _nameTextBubble(context, currentUser, message),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Column(
+                      crossAxisAlignment: currentUser.id == message.userid ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      children: [
+                        TextBubble(currentUser: currentUser, message: message),
+                        gapH4,
+                        Text(
+                          message.username,
+                          style: _style(
+                            context: context,
+                            color: const Color(0xff4f4f4f),
+                            currentUser: currentUser,
+                            message: message,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               // Currently Logged in user Avatar
-              currentUser.id == message.userid ? gapW8 : const SizedBox(),
+              gapW8,
               currentUser.id == message.userid
                   ? CircleAvatar(
                       radius: _radius,
@@ -71,63 +87,56 @@ class ChatBubble extends StatelessWidget {
   }
 }
 
-TextStyle _style(
-        {double fontSize = 18.0,
-        FontWeight? weight = FontWeight.bold,
-        required User currentUser,
-        required Message message,
-        required context}) =>
-    currentUser.id == message.userid
-        ? TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: weight)
-        : TextStyle(fontSize: fontSize, color: Theme.of(context).primaryColor, fontWeight: weight);
+class TextBubble extends StatelessWidget {
+  final User currentUser;
+  final Message message;
 
-Widget _nameTextBubble(BuildContext context, User currentUser, Message message) => Container(
-      padding: const EdgeInsets.all(24),
-      margin: const EdgeInsets.only(top: 20),
+  const TextBubble({
+    required this.currentUser,
+    required this.message,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const sharedRadius = Radius.circular(18);
+    return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: currentUser.id != message.userid
             ? const BorderRadius.only(
-                topRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
+                topLeft: sharedRadius,
+                bottomRight: sharedRadius,
+                topRight: sharedRadius,
               )
             : const BorderRadius.only(
-                topLeft: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-                bottomRight: Radius.circular(18),
-              )
-        // BorderRadius.circular(30)
-        ,
+                topLeft: sharedRadius,
+                bottomLeft: sharedRadius,
+                topRight: sharedRadius,
+              ),
         // Chat bubble color based on current user
-        color: currentUser.id == message.userid ? Colors.grey[500] : const Color.fromRGBO(228, 231, 233, 1),
+        color: currentUser.id == message.userid ? AppColor.primaryThemeColor.withOpacity(0.90) : Colors.white,
       ),
-      child:
-          // User name and text
-          Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // message
-          Text(
-            message.text,
-            style: _style(
-              fontSize: 16,
-              currentUser: currentUser,
-              message: message,
-              context: context,
-            ),
-          ),
-          gapH8,
-          // username
-          Text(
-            message.username,
-            style: _style(
-              fontSize: 16,
-              currentUser: currentUser,
-              message: message,
-              context: context,
-            ),
-          ),
-        ],
+      child: Text(
+        message.text,
+        style: _style(
+          context: context,
+          currentUser: currentUser,
+          message: message,
+        ),
       ),
     );
+  }
+}
+
+TextStyle _style({
+  required User currentUser,
+  required Message message,
+  required context,
+  Color? color,
+  double fontSize = 14.0,
+  FontWeight? weight = FontWeight.bold,
+}) =>
+    currentUser.id == message.userid
+        ? TextStyle(fontSize: fontSize, color: color ?? Colors.white, fontWeight: weight)
+        : TextStyle(fontSize: fontSize, color: color ?? Theme.of(context).primaryColor, fontWeight: weight);
