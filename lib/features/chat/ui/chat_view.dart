@@ -1,8 +1,10 @@
-import 'package:chatapp/features/chat/ui/widgets/logout_button.dart';
+import 'package:chatapp/app/theme/colors.dart';
+import 'package:chatapp/features/chat/ui/chat_view_model.dart';
 import 'package:chatapp/features/chat/ui/widgets/messages.dart';
 import 'package:chatapp/features/chat/ui/widgets/send_message_field.dart';
 import 'package:chatapp/shared/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // TODO: Show bottom snackbar when a new user enters the chat and if its the first time they are entering the chat then say welcome instead
 
@@ -13,36 +15,31 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy user
-    // const UserModel currentUser = UserModel(
-    //     id: '9999',
-    //     email: 'goku@dbz.com',
-    //     password: 'Bbz123!!@@',
-    //     username: 'Gohan',
-    //     url: '');
-
-    // current user passed from the auth screen
-    // final authInfo = ModalRoute.of(context)!.settings.arguments as Map;
-    // final User currentUser = authInfo['currentuser'] as User;
-
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColor.chatBgColor,
         appBar: AppBar(
+          foregroundColor: AppColor.primaryThemeColor,
+          scrolledUnderElevation: 0,
           title: const Text('Chatte'),
-          // option for user to logout
-          actions: logoutButton(context: context),
         ),
-        body: Column(children: <Widget>[
-          Expanded(
-              // Scrollable list of messages from authorized users
-              child: Messages(
-            user: currentUser,
-          )),
-          // Send message widget
-          SendMessage(
-            user: currentUser,
+        body: ChangeNotifierProvider(
+          create: (context) => ChatViewModel(),
+          builder: (context, _) => Column(
+            children: <Widget>[
+              Expanded(
+                // Scrollable list of messages from authorized users
+                child: Messages(
+                  user: currentUser,
+                ),
+              ),
+              // Send message widget
+              SendMessage(
+                user: currentUser,
+              ),
+            ],
           ),
-        ]),
+        ),
       ),
     );
   }
