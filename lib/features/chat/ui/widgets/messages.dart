@@ -31,8 +31,6 @@ class Messages extends StatelessWidget {
           );
         }
 
-        // Dynamic list of message models
-        // TODO: move to view model
         final List<Message> msgModels = [for (var msg in snapshot.data!) UserMessage.fromJSON(msg)];
 
         return ListView.builder(
@@ -41,13 +39,14 @@ class Messages extends StatelessWidget {
           itemCount: msgModels.length,
           itemBuilder: ((context, index) {
             return Padding(
-                padding: const EdgeInsets.all(8.0),
-                // Pass the current user create a chate bubble for each message
-                child: ChatBubble(
-                  currentUser: user,
-                  message: msgModels[index],
-                  key: ValueKey(msgModels[index].textID),
-                ));
+              padding: const EdgeInsets.all(8.0),
+              // Pass the current user create a chate bubble for each message
+              child: ChatBubble(
+                currentUser: user,
+                message: msgModels[index],
+                key: ValueKey(msgModels[index].textID),
+              ),
+            );
           }),
         );
       }),

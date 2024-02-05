@@ -9,8 +9,6 @@ class ChatViewModel extends ChangeNotifier {
 
   String? _message = '';
 
-  String? get nessage => _message;
-
   void setMessage(String? message) {
     _message = message;
     notifyListeners();

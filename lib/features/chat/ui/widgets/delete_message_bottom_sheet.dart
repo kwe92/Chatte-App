@@ -1,24 +1,26 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:chatapp/app/providers/chats_provider.dart';
+import 'package:chatapp/app/general/constants.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-Widget bottomSheet({required BuildContext context, required String messageid}) => SizedBox(
+class DeleteMessage extends StatelessWidget {
+  final String messageid;
+  const DeleteMessage({required this.messageid, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       height: 100,
       child: Center(
-        child: Consumer(
-          builder: ((context, ref, child) => TextButton(
-                onPressed: () async {
-                  final String path = ref.read(chatProvider.notifier).state;
+          child: TextButton(
+        onPressed: () async {
+          await chatService.deleteMessage(messageid, CollectionPath.chat.path);
 
-                  await chatService.deleteMessage(id: messageid, path: path);
-
-                  Navigator.pop(context);
-                },
-                child: const Text('Delete Message'),
-              )),
-        ),
-      ),
+          Navigator.pop(context);
+        },
+        child: const Text('Delete Message'),
+      )),
     );
+  }
+}

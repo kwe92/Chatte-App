@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // TODO: Show bottom snackbar when a new user enters the chat and if its the first time they are entering the chat then say welcome instead
-
-class ChatScreen extends StatelessWidget {
+class ChatView extends StatelessWidget {
   final User currentUser;
 
-  const ChatScreen({required this.currentUser, super.key});
+  const ChatView({required this.currentUser, super.key});
 
   @override
   Widget build(BuildContext context) {

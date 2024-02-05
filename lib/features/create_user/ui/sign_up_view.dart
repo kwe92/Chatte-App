@@ -144,7 +144,7 @@ class SignUpView extends StatelessWidget {
                           final currentUser = await model.createUserInFirebase();
 
                           if (currentUser != null) {
-                            await appNavigator.pushReplacement(ChatScreen(currentUser: currentUser));
+                            await appNavigator.pushReplacement(ChatView(currentUser: currentUser));
                           }
                         }
                       },

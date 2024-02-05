@@ -29,146 +29,153 @@ class SignInView extends StatelessWidget {
         builder: (context, child) {
           final model = Provider.of<SignInViewModel>(context);
 
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 24,
-              top: 72,
-              right: 24,
-            ),
-            child: Column(
-              // Scrollable form
-              children: [
-                const Text(
-                  'Login With',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                  ),
+          return Stack(
+            children: [
+              if (model.isBusy) paddedIndicator,
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 24,
+                  top: 72,
+                  right: 24,
                 ),
-                gapH32,
-                const Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Column(
+                  // Scrollable form
                   children: [
-                    SocialMediaIconButton(
-                      assetImageScale: 1.25,
-                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/apple_icon.png',
-                    ),
-                    gapW16,
-                    SocialMediaIconButton(
-                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/facebook_icon.png',
-                    ),
-                    gapW16,
-                    SocialMediaIconButton(
-                      isSVG: true,
-                      svgImageScale: 0.75,
-                      iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon.svg',
-                    ),
-                  ],
-                ),
-                gapH28,
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    HorizontalLine(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        'or',
-                        style: TextStyle(
-                          color: AppColor.grey3,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    const Text(
+                      'Login With',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    HorizontalLine(),
-                  ],
-                ),
-                gapH16,
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      // Form start
-                      child: Form(
-                        key: model.formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            // Form Fields
-                            BaseFormFields(
-                              showUserNameField: false,
-                              formFieldParameters: FormFieldParameters(
-                                emailController: model.emailController,
-                                passwordController: model.passwordController,
-                                setEmail: model.setEmail,
-                                setPassword: model.setPassword,
-                              ),
-                              formFieldValidators: FormFieldValidators(
-                                emailValidator: stringService.emptyEmailValidator,
-                                passwordValidator: stringService.emptyPasswordValidator,
-                              ),
+                    gapH32,
+                    const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SocialMediaIconButton(
+                          assetImageScale: 1.25,
+                          iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/apple_icon.png',
+                        ),
+                        gapW16,
+                        SocialMediaIconButton(
+                          iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/facebook_icon.png',
+                        ),
+                        gapW16,
+                        SocialMediaIconButton(
+                          isSVG: true,
+                          svgImageScale: 0.75,
+                          iconPath: '/Users/kwe/flutter-projects/ChatApp/chatapp/assets/twitter_icon.svg',
+                        ),
+                      ],
+                    ),
+                    gapH28,
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        HorizontalLine(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text(
+                            'or',
+                            style: TextStyle(
+                              color: AppColor.grey3,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
                             ),
-                            gapH24,
-                            Row(
-                              children: [
-                                CustomSwitch(
-                                  value: model.switchState,
-                                  onChanged: model.setSwitchState,
-                                ),
-                                const Text(
-                                  'Remember Me',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.black0,
-                                    fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        HorizontalLine(),
+                      ],
+                    ),
+                    gapH16,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          // Form start
+                          child: Form(
+                            key: model.formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                // Form Fields
+                                BaseFormFields(
+                                  showUserNameField: false,
+                                  formFieldParameters: FormFieldParameters(
+                                    emailController: model.emailController,
+                                    passwordController: model.passwordController,
+                                    setEmail: model.setEmail,
+                                    setPassword: model.setPassword,
                                   ),
+                                  formFieldValidators: FormFieldValidators(
+                                    emailValidator: stringService.emptyEmailValidator,
+                                    passwordValidator: stringService.emptyPasswordValidator,
+                                  ),
+                                ),
+                                gapH24,
+                                Row(
+                                  children: [
+                                    CustomSwitch(
+                                      value: model.switchState,
+                                      onChanged: model.setSwitchState,
+                                    ),
+                                    const Text(
+                                      'Remember Me',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: AppColor.black0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                gapH24,
+                                //Login button
+
+                                MainButton(
+                                  onPressed: !model.isBusy
+                                      ? () async {
+                                          if (Validator.trySubmit(model.formKey)) {
+                                            final currentUser = await model.signInWithEmailAndPassword();
+
+                                            if (currentUser != null) {
+                                              await appNavigator.push(ChatView(currentUser: currentUser));
+                                              model.clearText();
+                                            }
+                                          }
+                                        }
+                                      : () {},
+                                  child: const Text('Login'),
+                                ),
+                                gapH24,
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Don't have an account?",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: AppColor.grey3,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    CustomTextButton(
+                                      onPressed: () => appNavigator.push(const SignUpView()),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                                      child: const Text('Create Account'),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                            gapH24,
-                            //Login button
-
-                            MainButton(
-                              onPressed: () async {
-                                if (Validator.trySubmit(model.formKey)) {
-                                  final currentUser = await model.signInWithEmailAndPassword();
-
-                                  if (currentUser != null) {
-                                    await appNavigator.push(ChatScreen(currentUser: currentUser));
-                                    model.clearText();
-                                  }
-                                }
-                              },
-                              child: const Text('Login'),
-                            ),
-                            gapH24,
-                            Row(
-                              children: [
-                                const Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColor.grey3,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                CustomTextButton(
-                                  onPressed: () => appNavigator.push(const SignUpView()),
-                                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                                  child: const Text('Create Account'),
-                                ),
-                              ],
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              )
+            ],
           );
         },
       ),

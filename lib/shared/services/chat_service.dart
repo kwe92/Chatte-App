@@ -5,14 +5,14 @@ import 'package:chatapp/shared/services/services.dart';
 
 class ChatService {
   // Delete a message given the currently logged in user
-  Future<void> deleteMessage({required String id, required String path}) async {
-    final docUsers = firestoreService.instance.collection(path).doc(id);
+  Future<void> deleteMessage(String id, String collectionPath) async {
+    final docUsers = firestoreService.instance.collection(collectionPath).doc(id);
     await docUsers.delete();
   }
 
   // Send a message by current user
-  Future<void> sendMessage(User user, String text, String path) async {
-    final colRef = firestoreService.instance.collection(path);
+  Future<void> sendMessage(User user, String text, String collectionPath) async {
+    final colRef = firestoreService.instance.collection(collectionPath);
     final textID = colRef.doc().id;
     Message newMessage = UserMessage(
       userid: user.id,
