@@ -11,7 +11,7 @@ class ChatService {
   }
 
   // Send a message by current user
-  void sendMessage(User user, String text, String path) {
+  Future<void> sendMessage(User user, String text, String path) async {
     final colRef = firestoreService.instance.collection(path);
     final textID = colRef.doc().id;
     Message newMessage = UserMessage(
@@ -21,7 +21,7 @@ class ChatService {
       textID: textID,
       text: text,
     );
-    colRef.doc(textID).set(
+    await colRef.doc(textID).set(
           newMessage.toJSON(),
         );
   }

@@ -1,25 +1,22 @@
+import 'package:chatapp/features/chat/ui/chat_view_model.dart';
 import 'package:chatapp/features/chat/ui/widgets/chat_bubble.dart';
 import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/shared/models/user_message.dart';
 import 'package:chatapp/shared/models/user.dart';
-import 'package:chatapp/app/providers/chats_provider.dart';
-import 'package:chatapp/shared/services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
-class Messages extends ConsumerWidget {
+class Messages extends StatelessWidget {
   final User user;
 
   const Messages({required this.user, super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context) {
+    final ChatViewModel model = context.read<ChatViewModel>();
     return StreamBuilder(
       // Generate a list of all messages in the Firestore instance
-      stream: firestoreService.getAllDocuments(
-        collectionPath: ref.read(chatProvider.notifier).state,
-        orderBy: 'timestamp',
-      ),
+      stream: model.chatMessageStream(),
       builder: ((context, snapshot) {
         // Loading page
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,6 +32,7 @@ class Messages extends ConsumerWidget {
         }
 
         // Dynamic list of message models
+        // TODO: move to view model
         final List<Message> msgModels = [for (var msg in snapshot.data!) UserMessage.fromJSON(msg)];
 
         return ListView.builder(

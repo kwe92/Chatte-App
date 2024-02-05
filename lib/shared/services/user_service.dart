@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:chatapp/app/general/constants.dart';
 import 'package:chatapp/shared/models/user.dart' as abs;
 import 'package:chatapp/shared/models/user_model.dart';
 import 'package:chatapp/shared/services/services.dart';
@@ -70,7 +71,7 @@ class UserService extends ChangeNotifier {
   }
 
   void userNameListener() {
-    final usersStream = firestoreService.getAllDocuments(collectionPath: 'users');
+    final usersStream = firestoreService.getAllDocuments(collectionPath: CollectionPath.users.path);
 
     _usersStreamSub = usersStream.listen(
       (users) {

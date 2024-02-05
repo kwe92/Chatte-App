@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chatapp/app/general/constants.dart';
 import 'package:chatapp/shared/models/user.dart' as abs;
 import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/extended_change_notifier.dart';
@@ -101,7 +102,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     try {
       doesUserNameExist();
 
-      final colRef = firestoreService.instance.collection('users');
+      final colRef = firestoreService.instance.collection(CollectionPath.users.path);
 
       setBusy(true);
 
@@ -143,7 +144,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   setCurrentUser(UserCredential? userCredential) async {
     if (userCredential != null) {
       _currentUser = await userService.getCurrentUser(
-        'users',
+        CollectionPath.users.path,
         userCredential.user!.uid,
       );
 

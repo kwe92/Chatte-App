@@ -23,4 +23,6 @@ class AppColor {
   static const primaryGreen = Color(0xff4fd15c);
 
   static const primaryThemeColor = primaryPurple;
+
+  static const chatBgColor = Color(0xffefeff2);
 }
