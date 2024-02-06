@@ -16,11 +16,15 @@ class ChatViewModel extends ExtendedChangeNotifier {
 
   String? _imageUrl;
 
+  String? _imageFileName;
+
   Reference? _imageStorageRef;
 
   File? _pickedImage;
 
   String? get imageUrl => _imageUrl;
+
+  String? get imageFileName => _imageFileName;
 
   File? get pickedImage => _pickedImage;
 
@@ -30,9 +34,16 @@ class ChatViewModel extends ExtendedChangeNotifier {
   }
 
   Future<void> sendMessage(abs.User user) async {
-    await runBusyFuture(
-      () => chatService.sendMessage(user, _message!, CollectionPath.chat.path, _imageUrl),
-    );
+    await runBusyFuture(() async {
+      await uploadImageToFirebase();
+      await chatService.sendMessage(
+        user,
+        _message!,
+        collectionPath: CollectionPath.chat.path,
+        messageImageUrl: _imageUrl,
+        messageImageFileName: _imageFileName,
+      );
+    });
 
     if (_pickedImage != null || _imageUrl != null || _imageUrl!.isNotEmpty) {
       clearImageData();
@@ -41,12 +52,16 @@ class ChatViewModel extends ExtendedChangeNotifier {
   }
 
   Future<void> deleteMessage(Message message) async {
-    if (message.messageImageUrl != null || message.messageImageUrl!.isNotEmpty) {
-      // TODO: use the name of the image file
-      final storageRef = firebaseService.storageInstance.ref(message.messageImageUrl);
+    await deleteMessageImage(message);
+    await chatService.deleteMessage(message.textID, CollectionPath.chat.path);
+  }
+
+  Future<void> deleteMessageImage(Message message) async {
+    if (message.messageImageFileName != null && message.messageImageFileName!.isNotEmpty) {
+      final storageRef = firebaseService.storageInstance.ref().child(CollectionPath.images.path).child(message.messageImageFileName!);
+
       await storageRef.delete();
     }
-    await chatService.deleteMessage(message.textID, CollectionPath.chat.path);
   }
 
   Stream chatMessageStream() async* {
@@ -56,30 +71,28 @@ class ChatViewModel extends ExtendedChangeNotifier {
     );
   }
 
-  Future<void> clearImage() async {
-    await runBusyFuture(
-      () => _imageStorageRef!.delete(),
-    );
-    clearImageData();
-  }
-
-  // TODO: refactor to only upload image if user sends message
-  // TODO: refactor setBusy
   Future<void> pickImage(abs.User user) async {
-    final (imageFile, _, error) = await runBusyFuture<(File?, bool, String?)>(() => imagePickerService.pickImage());
+    final (imageFile, _, error) = await imagePickerService.pickImage();
 
     if (error != null) {
       toastService.showSnackBar("image maybe corrupted, please try another image.");
       return;
     }
 
+    _pickedImage = imageFile;
+
+    _imageFileName = "${user.id}-${DateTime.now()}-messageImage.jpg";
+
+    notifyListeners();
+  }
+
+  Future<void> uploadImageToFirebase() async {
     try {
-      _imageStorageRef = await firebaseService.uploadImageToStorage("${user.id}-${DateTime.now()}-messageImage", imageFile);
+      _imageStorageRef = await firebaseService.uploadImageToStorage(_imageFileName!, _pickedImage);
     } catch (e) {
+      _imageFileName = null;
       debugPrint("exception in pickImage chat view: ${e.toString()}");
     }
-
-    _pickedImage = imageFile;
 
     _imageUrl = await _imageStorageRef!.getDownloadURL();
 
@@ -89,6 +102,8 @@ class ChatViewModel extends ExtendedChangeNotifier {
   void clearImageData() {
     _imageUrl = null;
     _pickedImage = null;
+    _imageFileName = null;
+    _imageStorageRef = null;
     notifyListeners();
   }
 }
