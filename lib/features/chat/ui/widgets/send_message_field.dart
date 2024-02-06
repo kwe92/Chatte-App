@@ -18,40 +18,67 @@ class SendMessage extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //Typing field
-          Expanded(
-            child: Form(
-              key: model.formKey,
-              child: TextFormField(
-                controller: model.messageController,
-                onChanged: model.setMessage,
-                // Validators
-                validator: _messageValidator,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  hintText: "Type a message here...",
-                  prefixIcon: IconButton(
-                    onPressed: () {
-                      // TODO: implement camera functionality
-                    },
-                    icon: const Icon(Icons.camera_alt_outlined),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              if (context.watch<ChatViewModel>().pickedImage != null) ...[
+                Image(
+                  image: FileImage(model.pickedImage!),
+                ),
+                CircleWidget(
+                  size: 40,
+                  backgroundColor: Colors.transparent,
+                  borderWidth: 2,
+                  borderColor: AppColor.primaryThemeColor,
+                  child: IconButton(
+                    onPressed: () async => await model.clearImage(),
+                    icon: const Icon(
+                      Icons.close,
+                      size: 20,
+                      color: AppColor.primaryThemeColor,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          Row(
+            children: [
+              //Typing field
+              Expanded(
+                child: Form(
+                  key: model.formKey,
+                  child: TextFormField(
+                    controller: model.messageController,
+                    onChanged: model.setMessage,
+                    // Validators
+                    validator: _messageValidator,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: "Type a message here...",
+                      prefixIcon: IconButton(
+                        onPressed: () => model.pickImage(user),
+                        icon: const Icon(Icons.camera_alt_outlined),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-          IconButton(
-            onPressed: () => Validator.trySubmit(model.formKey) ? model.sendMessage(user) : null,
-            icon: const CircleWidget(
-              size: 42,
-              backgroundColor: AppColor.primaryThemeColor,
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
+              IconButton(
+                onPressed: () => Validator.trySubmit(model.formKey) ? model.sendMessage(user) : null,
+                icon: const CircleWidget(
+                  size: 42,
+                  backgroundColor: AppColor.primaryThemeColor,
+                  child: Icon(
+                    Icons.send,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
