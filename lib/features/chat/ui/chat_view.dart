@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // TODO: Show bottom snackbar when a new user enters the chat and if its the first time they are entering the chat then say welcome instead
+
+// TODO: add busy state when image pick starts
+
 class ChatView extends StatelessWidget {
   final User currentUser;
 
@@ -23,22 +26,29 @@ class ChatView extends StatelessWidget {
           title: const Text('Chatte'),
         ),
         body: ChangeNotifierProvider(
-          create: (context) => ChatViewModel(),
-          builder: (context, _) => Column(
-            children: <Widget>[
-              Expanded(
-                // Scrollable list of messages from authorized users
-                child: Messages(
-                  user: currentUser,
-                ),
-              ),
-              // Send message widget
-              SendMessage(
-                user: currentUser,
-              ),
-            ],
-          ),
-        ),
+            create: (context) => ChatViewModel(),
+            builder: (context, _) {
+              // final model = Provider.of<ChatViewModel>(context);
+              return Stack(
+                children: [
+                  // if (model.isBusy) paddedIndicator,
+                  Column(
+                    children: <Widget>[
+                      Expanded(
+                        // Scrollable list of messages from authorized users
+                        child: Messages(
+                          user: currentUser,
+                        ),
+                      ),
+                      // Send message widget
+                      SendMessage(
+                        user: currentUser,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }
