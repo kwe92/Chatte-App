@@ -1,26 +1,38 @@
-import 'package:chatapp/features/chat/domain/message_model.dart';
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/shared/models/message.dart';
+import 'package:chatapp/shared/models/user_message.dart';
+import 'package:chatapp/shared/models/user.dart';
 import 'package:chatapp/shared/services/services.dart';
 
 class ChatService {
   // Delete a message given the currently logged in user
-  Future<void> deleteMessage({required String id, required String path}) async {
-    final docUsers = firestoreService.instance.collection(path).doc(id);
+  Future<void> deleteMessage(String id, String collectionPath) async {
+    final docUsers = firestoreService.instance.collection(collectionPath).doc(id);
     await docUsers.delete();
   }
 
+  // TODO: refactor method parameters
   // Send a message by current user
-  void sendMessage(AbstractUser user, String text, String path) {
-    final colRef = firestoreService.instance.collection(path);
+  Future<void> sendMessage(
+    User user,
+    String text, {
+    required String collectionPath,
+    String? messageImageUrl,
+    String? messageImageFileName,
+  }) async {
+    final colRef = firestoreService.instance.collection(collectionPath);
+
     final textID = colRef.doc().id;
-    MessageModel newMessage = MessageModel(
+
+    Message newMessage = UserMessage(
       userid: user.id,
       username: user.username,
       userImageUrl: user.url,
+      messageImageUrl: messageImageUrl,
+      messageImageFileName: messageImageFileName,
       textID: textID,
       text: text,
     );
-    colRef.doc(textID).set(
+    await colRef.doc(textID).set(
           newMessage.toJSON(),
         );
   }

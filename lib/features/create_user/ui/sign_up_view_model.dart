@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/app/general/constants.dart';
+import 'package:chatapp/shared/models/user.dart' as abs;
 import 'package:chatapp/shared/services/services.dart';
 import 'package:chatapp/shared/utils/classes/extended_change_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
 
   String _confirmPassword = '';
 
-  AbstractUser? _currentUser;
+  abs.User? _currentUser;
 
   File? _pickedImage;
 
@@ -97,11 +98,11 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     }
   }
 
-  Future<AbstractUser?> createUserInFirebase() async {
+  Future<abs.User?> createUserInFirebase() async {
     try {
       doesUserNameExist();
 
-      final colRef = firestoreService.instance.collection('users');
+      final colRef = firestoreService.instance.collection(CollectionPath.users.path);
 
       setBusy(true);
 
@@ -143,7 +144,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   setCurrentUser(UserCredential? userCredential) async {
     if (userCredential != null) {
       _currentUser = await userService.getCurrentUser(
-        'users',
+        CollectionPath.users.path,
         userCredential.user!.uid,
       );
 

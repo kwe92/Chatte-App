@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:chatapp/shared/models/base_user.dart';
-import 'package:chatapp/shared/models/user.dart';
+import 'package:chatapp/app/general/constants.dart';
+import 'package:chatapp/shared/models/user.dart' as abs;
+import 'package:chatapp/shared/models/user_model.dart';
 import 'package:chatapp/shared/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +33,7 @@ class UserService extends ChangeNotifier {
 
       final storageRef = await firebaseService.uploadImageToStorage(userid, file);
 
-      final AbstractUser user = UserModel(
+      final abs.User user = UserModel(
         id: userid,
         username: userName,
         password: password,
@@ -48,7 +49,7 @@ class UserService extends ChangeNotifier {
   }
 
   // Retrieve a single user by id
-  Future<AbstractUser> getCurrentUser(String collectionPath, String userid) async {
+  Future<abs.User> getCurrentUser(String collectionPath, String userid) async {
     // Get user by id
     final docSnapshot = await firebaseService.getUser(collectionPath: collectionPath, userid: userid);
 
@@ -62,7 +63,7 @@ class UserService extends ChangeNotifier {
 
   Future<void> overrideUserData(
     CollectionReference<Map<String, dynamic>> colRef,
-    AbstractUser user,
+    abs.User user,
   ) async {
     final json = user.toJSON();
 
@@ -70,7 +71,7 @@ class UserService extends ChangeNotifier {
   }
 
   void userNameListener() {
-    final usersStream = firestoreService.getAllDocuments(collectionPath: 'users');
+    final usersStream = firestoreService.getAllDocuments(collectionPath: CollectionPath.users.path);
 
     _usersStreamSub = usersStream.listen(
       (users) {

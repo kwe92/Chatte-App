@@ -1,8 +1,10 @@
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/app/general/constants.dart';
+import 'package:chatapp/shared/models/user.dart';
+import 'package:chatapp/shared/utils/classes/extended_change_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:chatapp/shared/services/services.dart';
 
-class SignInViewModel extends ChangeNotifier {
+class SignInViewModel extends ExtendedChangeNotifier {
   SignInViewModel();
 
   final formKey = GlobalKey<FormState>();
@@ -41,26 +43,30 @@ class SignInViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<AbstractUser?> signInWithEmailAndPassword() async {
+  Future<User?> signInWithEmailAndPassword() async {
+    setBusy(true);
     var error = await firebaseService.signInWithEmailAndPassword(email, password);
 
     if (error == null) {
       // currently logged in user data
       final currentUser = await createCurrentUser();
+      setBusy(false);
 
       return currentUser;
     }
+
+    setBusy(false);
 
     toastService.showSnackBar("Invalid username or password, please try again.");
 
     return null;
   }
 
-  Future<AbstractUser> createCurrentUser() async {
+  Future<User> createCurrentUser() async {
     final String userid = firebaseService.currentUser!.uid;
 
     // Currently logged in user data
-    final currentUser = await userService.getCurrentUser('users', userid);
+    final currentUser = await userService.getCurrentUser(CollectionPath.users.path, userid);
 
     return currentUser;
   }

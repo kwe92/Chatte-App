@@ -1,7 +1,9 @@
 import 'dart:io';
 
-import 'package:chatapp/features/chat/domain/message_model.dart';
-import 'package:chatapp/shared/models/base_user.dart';
+import 'package:chatapp/app/general/constants.dart';
+import 'package:chatapp/shared/models/message.dart';
+import 'package:chatapp/shared/models/user_message.dart';
+import 'package:chatapp/shared/models/user.dart' as abs;
 import 'package:chatapp/shared/services/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +19,8 @@ class FirebaseService extends ChangeNotifier {
   late FirebaseAuth _authInstance;
   late FirebaseStorage _storageInstance;
   late FirebaseFirestore _firestoreInstance;
+
+  FirebaseStorage get storageInstance => _storageInstance;
 
   User? get currentUser => _authInstance.currentUser;
   bool get isLoggedIn => _isLoggedIn;
@@ -65,7 +69,7 @@ class FirebaseService extends ChangeNotifier {
 
   // upload image and return current image reference
   Future<Reference> uploadImageToStorage(String imageName, File? imageFile) async {
-    final storageRef = _storageInstance.ref().child('user_images').child('$imageName.jpg');
+    final storageRef = _storageInstance.ref().child(CollectionPath.images.path).child(imageName);
 
     await storageRef.putFile(imageFile!);
 
@@ -83,10 +87,10 @@ class FirebaseService extends ChangeNotifier {
   }
 
 // Send a message by current user
-  void sendMessage(AbstractUser user, String text, String path) async {
+  void sendMessage(abs.User user, String text, String path) async {
     final colRef = FirebaseFirestore.instance.collection(path);
     final textID = colRef.doc().id;
-    MessageModel newMessage = MessageModel(userid: user.id, username: user.username, userImageUrl: user.url, textID: textID, text: text);
+    Message newMessage = UserMessage(userid: user.id, username: user.username, userImageUrl: user.url, textID: textID, text: text);
     await colRef.doc(textID).set(newMessage.toJSON());
   }
 }
