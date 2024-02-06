@@ -1,6 +1,6 @@
 import 'package:chatapp/app/resources/reusables.dart';
 import 'package:chatapp/app/theme/text_styles.dart';
-import 'package:chatapp/features/chat/ui/widgets/delete_message_bottom_sheet.dart';
+import 'package:chatapp/features/chat/ui/widgets/delete_message.dart';
 import 'package:chatapp/features/chat/ui/widgets/text_bubble.dart';
 import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/shared/models/user.dart';
@@ -44,7 +44,7 @@ class ChatBubble extends StatelessWidget {
                             // Option to delete the message pressed permanently
                             showModalBottomSheet(
                               context: context,
-                              builder: (context) => DeleteMessage(messageid: message.textID),
+                              builder: (context) => DeleteMessage(message: message),
                             )
                           }
                       : null,

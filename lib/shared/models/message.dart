@@ -6,6 +6,7 @@ abstract class Message {
   final String userImageUrl;
   final String textID;
   final String text;
+  final String? messageImageUrl;
 
   Timestamp get timeStamp;
 
@@ -15,6 +16,7 @@ abstract class Message {
     required this.userImageUrl,
     required this.textID,
     required this.text,
+    this.messageImageUrl,
   });
 
   Map<String, dynamic> toJSON();

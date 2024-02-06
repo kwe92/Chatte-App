@@ -19,6 +19,8 @@ class FirebaseService extends ChangeNotifier {
   late FirebaseStorage _storageInstance;
   late FirebaseFirestore _firestoreInstance;
 
+  FirebaseStorage get storageInstance => _storageInstance;
+
   User? get currentUser => _authInstance.currentUser;
   bool get isLoggedIn => _isLoggedIn;
 

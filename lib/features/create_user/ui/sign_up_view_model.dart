@@ -86,6 +86,8 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     notifyListeners();
   }
 
+  // TODO: refactor to only upload image if user completes signup
+
   Future<void> pickImage() async {
     final (imageFile, didPickImage, error) = await runBusyFuture<(File?, bool, String?)>(() => imagePickerService.pickImage());
 

@@ -10,14 +10,16 @@ class ChatService {
     await docUsers.delete();
   }
 
+  // TODO: refactor method parameters
   // Send a message by current user
-  Future<void> sendMessage(User user, String text, String collectionPath) async {
+  Future<void> sendMessage(User user, String text, String collectionPath, [String? messageImageUrl]) async {
     final colRef = firestoreService.instance.collection(collectionPath);
     final textID = colRef.doc().id;
     Message newMessage = UserMessage(
       userid: user.id,
       username: user.username,
       userImageUrl: user.url,
+      messageImageUrl: messageImageUrl,
       textID: textID,
       text: text,
     );

@@ -11,6 +11,7 @@ class UserMessage extends Message {
     required super.userImageUrl,
     required super.textID,
     required super.text,
+    super.messageImageUrl,
   });
 
   @override
@@ -19,6 +20,7 @@ class UserMessage extends Message {
       'username': username,
       'userid': userid,
       'userimage': userImageUrl,
+      'message_image': messageImageUrl,
       'textid': textID,
       'text': text.trim(),
       'timestamp': timeStamp,
@@ -31,6 +33,7 @@ class UserMessage extends Message {
       username: json['username'],
       userid: json['userid'],
       userImageUrl: json['userimage'],
+      messageImageUrl: json['message_image'],
       textID: json['textid'],
       text: json['text'],
     );
@@ -38,7 +41,7 @@ class UserMessage extends Message {
 
   @override
   String toString() {
-    return 'UserMessage(userid: $userid, username: $username, userImageUrl: $userImageUrl, textID: $textID, text: $text)';
+    return 'UserMessage(userid: $userid, username: $username, userImageUrl: $userImageUrl, messageImageUrl: $messageImageUrl, textID: $textID, text: $text)';
   }
 
   @override
