@@ -34,13 +34,20 @@ class TextBubble extends StatelessWidget {
         // Chat bubble color based on current user
         color: currentUser.id == message.userid ? AppColor.primaryThemeColor.withOpacity(0.90) : Colors.white,
       ),
-      child: Text(
-        message.text,
-        style: chatTextStyle(
-          context: context,
-          currentUser: currentUser,
-          message: message,
-        ),
+      child: Column(
+        children: [
+          message.messageImageUrl != null && message.messageImageUrl!.isNotEmpty
+              ? Image.network(message.messageImageUrl!)
+              : const SizedBox(),
+          Text(
+            message.text,
+            style: chatTextStyle(
+              context: context,
+              currentUser: currentUser,
+              message: message,
+            ),
+          ),
+        ],
       ),
     );
   }
