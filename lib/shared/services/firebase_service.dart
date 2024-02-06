@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chatapp/app/general/constants.dart';
 import 'package:chatapp/shared/models/message.dart';
 import 'package:chatapp/shared/models/user_message.dart';
 import 'package:chatapp/shared/models/user.dart' as abs;
@@ -68,7 +69,7 @@ class FirebaseService extends ChangeNotifier {
 
   // upload image and return current image reference
   Future<Reference> uploadImageToStorage(String imageName, File? imageFile) async {
-    final storageRef = _storageInstance.ref().child('user_images').child('$imageName.jpg');
+    final storageRef = _storageInstance.ref().child(CollectionPath.images.path).child(imageName);
 
     await storageRef.putFile(imageFile!);
 

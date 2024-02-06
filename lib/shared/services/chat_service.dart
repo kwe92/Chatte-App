@@ -12,14 +12,23 @@ class ChatService {
 
   // TODO: refactor method parameters
   // Send a message by current user
-  Future<void> sendMessage(User user, String text, String collectionPath, [String? messageImageUrl]) async {
+  Future<void> sendMessage(
+    User user,
+    String text, {
+    required String collectionPath,
+    String? messageImageUrl,
+    String? messageImageFileName,
+  }) async {
     final colRef = firestoreService.instance.collection(collectionPath);
+
     final textID = colRef.doc().id;
+
     Message newMessage = UserMessage(
       userid: user.id,
       username: user.username,
       userImageUrl: user.url,
       messageImageUrl: messageImageUrl,
+      messageImageFileName: messageImageFileName,
       textID: textID,
       text: text,
     );

@@ -12,6 +12,7 @@ class UserMessage extends Message {
     required super.textID,
     required super.text,
     super.messageImageUrl,
+    super.messageImageFileName,
   });
 
   @override
@@ -21,6 +22,7 @@ class UserMessage extends Message {
       'userid': userid,
       'userimage': userImageUrl,
       'message_image': messageImageUrl,
+      'message_image_file_name': messageImageFileName,
       'textid': textID,
       'text': text.trim(),
       'timestamp': timeStamp,
@@ -34,6 +36,7 @@ class UserMessage extends Message {
       userid: json['userid'],
       userImageUrl: json['userimage'],
       messageImageUrl: json['message_image'],
+      messageImageFileName: json['message_image_file_name'],
       textID: json['textid'],
       text: json['text'],
     );

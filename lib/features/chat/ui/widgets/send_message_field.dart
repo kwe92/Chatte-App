@@ -34,7 +34,7 @@ class SendMessage extends StatelessWidget {
                   borderWidth: 2,
                   borderColor: AppColor.primaryThemeColor,
                   child: IconButton(
-                    onPressed: () async => await model.clearImage(),
+                    onPressed: () => model.clearImageData(),
                     icon: const Icon(
                       Icons.close,
                       size: 20,
