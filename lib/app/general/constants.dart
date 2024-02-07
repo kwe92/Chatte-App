@@ -1,3 +1,5 @@
+// TODO: ensure that collectionPath parameters have a type of CollectionPath instead of String
+
 enum CollectionPath {
   users("users"),
 
