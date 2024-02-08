@@ -46,6 +46,7 @@ dependencies:
   get_it: ^7.6.7
   flutter_svg: ^2.0.9
   image_picker_platform_interface: ^2.9.3
+  mocktail: ^1.0.3
 
 dev_dependencies:
   flutter_test:

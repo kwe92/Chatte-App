@@ -141,7 +141,7 @@ class SignInView extends StatelessWidget {
 
                                             if (currentUser != null) {
                                               await appNavigator.push(ChatView(currentUser: currentUser));
-                                              model.clearText();
+                                              model.clearData();
                                             }
                                           }
                                         }
