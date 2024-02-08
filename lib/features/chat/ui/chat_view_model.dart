@@ -75,7 +75,7 @@ class ChatViewModel extends ExtendedChangeNotifier {
     final (imageFile, _, error) = await imagePickerService.pickImage();
 
     if (error != null) {
-      toastService.showSnackBar("image maybe corrupted, please try another image.");
+      toastService.showSnackBar(ToastServiceErrorMessage.imageError);
       return;
     }
 
