@@ -71,7 +71,7 @@ class SignInViewModel extends ExtendedChangeNotifier {
     return currentUser;
   }
 
-  void clearText() {
+  void clearData() {
     emailController.clear();
     passwordController.clear();
     setEmail('');
