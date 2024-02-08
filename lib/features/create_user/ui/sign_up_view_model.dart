@@ -42,7 +42,7 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   bool get isMatchingPassword => _password == _confirmPassword;
 
   // callback for picking an image | UserImagePicker
-  void _setPickedImage(File? pickedimage) {
+  void setPickedImage(File? pickedimage) {
     _pickedImage = pickedimage;
     _isImagePicked = true;
     notifyListeners();
@@ -54,8 +54,10 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     notifyListeners();
   }
 
-  void setIsChecked(checked) {
-    _isChecked = checked;
+  void setIsChecked(bool? checked) {
+    if (checked != null) {
+      _isChecked = checked;
+    }
     notifyListeners();
   }
 
@@ -86,15 +88,28 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     notifyListeners();
   }
 
+  setCurrentUser(UserCredential? userCredential) async {
+    if (userCredential != null) {
+      _currentUser = await userService.getCurrentUser(
+        CollectionPath.users.path,
+        userCredential.user!.uid,
+      );
+
+      debugPrint('currentUser: $_currentUser');
+    } else {
+      throw Exception('there was an issue during account creation.');
+    }
+  }
+
   Future<void> pickImage() async {
     final (imageFile, didPickImage, error) = await runBusyFuture<(File?, bool, String?)>(() => imagePickerService.pickImage());
 
     if (error != null) {
-      toastService.showSnackBar("image maybe corrupted, please try another image.");
+      toastService.showSnackBar(ToastServiceErrorMessage.imageError);
     }
 
     if (didPickImage && imageFile != null) {
-      _setPickedImage(imageFile);
+      setPickedImage(imageFile);
     }
   }
 
@@ -122,6 +137,8 @@ class SignUpViewModel extends ExtendedChangeNotifier {
 
       setBusy(false);
 
+      debugPrint("_currentUser: $_currentUser");
+
       return _currentUser;
     } catch (exception) {
       debugPrint(exception.toString());
@@ -133,34 +150,23 @@ class SignUpViewModel extends ExtendedChangeNotifier {
   void doesUserNameExist() {
     final bool userNameExists = userService.userNames.contains(_username.toLowerCase());
 
+    debugPrint("userService.userNames: ${userService.userNames}");
+
     debugPrint('userNameExists: $userNameExists');
 
     if (userNameExists) {
-      toastService.showSnackBar('user name taken.');
+      toastService.showSnackBar(ToastServiceErrorMessage.unavailableUserNameError);
       throw Exception('user name taken.');
-    }
-  }
-
-  setCurrentUser(UserCredential? userCredential) async {
-    if (userCredential != null) {
-      _currentUser = await userService.getCurrentUser(
-        CollectionPath.users.path,
-        userCredential.user!.uid,
-      );
-
-      debugPrint('currentUser: $_currentUser');
-    } else {
-      throw Exception('there was an issue during account creation.');
     }
   }
 
   void checkError(String? error) {
     if (error != null) {
       if (error.toString().contains('in use')) {
-        toastService.showSnackBar('email address in use.');
+        toastService.showSnackBar(ToastServiceErrorMessage.unavailableEmailError);
         throw Exception('email address in use.');
       }
-      toastService.showSnackBar('there was an issue creating your account.');
+      toastService.showSnackBar(ToastServiceErrorMessage.accountCreationError);
       throw Exception('there was an issue during account creation.');
     }
   }
@@ -172,18 +178,19 @@ class SignUpViewModel extends ExtendedChangeNotifier {
     }
 
     if (!isMatchingPassword) {
-      toastService.showSnackBar('passwords do not match');
+      toastService.showSnackBar(ToastServiceErrorMessage.passwordMismatchError);
       return false;
     }
 
     if (!isChecked) {
-      toastService.showSnackBar('accept terms and conditions before proceeding');
+      toastService.showSnackBar(ToastServiceErrorMessage.termsAndConditionsError);
 
       return false;
     }
 
     if (!ready) {
-      toastService.showSnackBar('please fill out all required fields.');
+      toastService.showSnackBar(ToastServiceErrorMessage.fillAllRequiredFieldsError);
+      return false;
     }
 
     return true;
