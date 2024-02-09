@@ -41,6 +41,7 @@ class BaseFormFields extends StatelessWidget {
         ),
         gapH12,
         TextFormField(
+          // key: keyService.emailKey,
           controller: formFieldParameters.emailController,
           onChanged: formFieldParameters.setEmail,
           keyboardType: TextInputType.emailAddress,
@@ -62,6 +63,7 @@ class BaseFormFields extends StatelessWidget {
           ),
           gapH12,
           TextFormField(
+            // key: keyService.usernameKey,
             controller: formFieldParameters.userNameController,
             keyboardType: TextInputType.text,
             onChanged: formFieldParameters.setUsername,
@@ -89,6 +91,7 @@ class BaseFormFields extends StatelessWidget {
               return Column(
                 children: [
                   TextFormField(
+                    // key: keyService.passwordKey,
                     controller: formFieldParameters.passwordController,
                     onChanged: formFieldParameters.setPassword,
                     obscureText: passwordVisibilityController.isObscured,
@@ -109,6 +112,7 @@ class BaseFormFields extends StatelessWidget {
                   if (showConfirmPasswordField) ...[
                     gapH12,
                     TextFormField(
+                      // key: keyService.confirmPasswordKey,
                       controller: formFieldParameters.conFirmPasswordController,
                       onChanged: formFieldParameters.setConfirmPassword,
                       obscureText: passwordVisibilityController.isObscured,
