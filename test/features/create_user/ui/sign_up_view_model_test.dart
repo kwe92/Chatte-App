@@ -141,6 +141,11 @@ void main() {
 
       getAndRegisterToastService();
 
+      getAndRegisterFirebaseService(
+        email: testUser.email,
+        password: testUser.password,
+      );
+
       getAndRegisterUserService();
 
       final model = getModel();
