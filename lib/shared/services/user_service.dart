@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 class UserService extends ChangeNotifier {
   List<dynamic> _userNames = [];
 
+  // TODO: should be cast to a list of strings
   List<dynamic> get userNames => _userNames;
 
   late StreamSubscription _usersStreamSub;

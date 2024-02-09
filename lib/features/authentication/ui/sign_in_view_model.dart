@@ -57,7 +57,7 @@ class SignInViewModel extends ExtendedChangeNotifier {
 
     setBusy(false);
 
-    toastService.showSnackBar("Invalid username or password, please try again.");
+    toastService.showSnackBar(ToastServiceErrorMessage.failedLoginError);
 
     return null;
   }

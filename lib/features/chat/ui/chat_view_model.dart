@@ -22,6 +22,8 @@ class ChatViewModel extends ExtendedChangeNotifier {
 
   File? _pickedImage;
 
+  String? get message => _message;
+
   String? get imageUrl => _imageUrl;
 
   String? get imageFileName => _imageFileName;
@@ -75,20 +77,24 @@ class ChatViewModel extends ExtendedChangeNotifier {
     final (imageFile, _, error) = await imagePickerService.pickImage();
 
     if (error != null) {
-      toastService.showSnackBar("image maybe corrupted, please try another image.");
+      toastService.showSnackBar(ToastServiceErrorMessage.imageError);
       return;
     }
 
     _pickedImage = imageFile;
 
-    _imageFileName = "${user.id}-${DateTime.now()}-messageImage.jpg";
+    _imageFileName = "${user.id}-${DateTime.now()}-message-image.jpg";
 
     notifyListeners();
   }
 
   Future<void> uploadImageToFirebase() async {
     try {
-      _imageStorageRef = await firebaseService.uploadImageToStorage(_imageFileName!, _pickedImage);
+      _imageStorageRef = await firebaseService.uploadImageToStorage(
+        // TODO: this is only here for testing, should be refactored
+        _imageFileName ?? "${DateTime.now()}-message-image.jpg",
+        _pickedImage,
+      );
     } catch (e) {
       _imageFileName = null;
       debugPrint("exception in pickImage chat view: ${e.toString()}");
