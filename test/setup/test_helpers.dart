@@ -1,8 +1,9 @@
 import 'dart:io';
-
 import 'package:chatapp/app/general/constants.dart';
 import 'package:chatapp/app/navigation/app_navigator.dart';
 import 'package:chatapp/shared/controllers/password_visiblity_controller.dart';
+import 'package:chatapp/shared/models/user.dart';
+import 'package:chatapp/shared/services/chat_service.dart';
 import 'package:chatapp/shared/services/firebase_service.dart';
 import 'package:chatapp/shared/services/firestore_service.dart';
 import 'package:chatapp/shared/services/get_it.dart';
@@ -53,10 +54,7 @@ T getAndRegisterService<T extends Object>(
   return locator.get<T>();
 }
 
-FirebaseService getAndRegisterFirebaseService({
-  required String email,
-  required String password,
-}) {
+FirebaseService getAndRegisterFirebaseService({required String email, required String password, File? imageFIle}) {
   _removeRegistrationIfExists<FirebaseService>();
 
   final FirebaseService service = MockFirebaseService();
@@ -67,15 +65,29 @@ FirebaseService getAndRegisterFirebaseService({
     (_) async => await Future.value(null),
   );
 
-  // TODO: research and figure out why this is not working
+  when(() => service.createUserWithEmailAndPassword(email, password)).thenAnswer(
+    (_) async => await Future.value(
+      (mockUserCredential, null),
+    ),
+  );
 
-  // when(() => service.getUser(collectionPath: CollectionPath.users.path, userid: testUser.id)).thenAnswer(
-  //   (_) async => await Future.value(
-  //     mockDocumentSnapshot,
-  //   ),
-  // );
+  when(() => service.uploadImageToStorage(any(), any())).thenAnswer((_) => Future.value(testReference));
 
   when(() => service.currentUser).thenReturn(mockFirebaseUser);
+
+  // final ref = FirebaseStorage.instance.ref();
+
+  // TODO: Figureout why this is not working
+
+  // when(() => service.storageInstance.ref().child(any()).child(any())).thenReturn(ref);
+
+  // TODO: research and figure out why this is not working
+
+  when(() => service.getUser(collectionPath: CollectionPath.users.path, userid: testUser.id)).thenAnswer(
+    (_) async => await Future.value(
+      testDocumentSnapshot,
+    ),
+  );
 
   locator.registerSingleton<FirebaseService>(service);
 
@@ -102,7 +114,11 @@ UserService getAndRegisterUserService() {
   //       email: testUser.email,
   //       file: testPickedImage,
   //       colRef: mockCollectionReference,
-  //     )).thenAnswer((_) async => await Future.value((mockUserCredential, null)));
+  //     )).thenAnswer(
+  //   (_) async => await Future.value(
+  //     (mockUserCredential, null),
+  //   ),
+  // );
 
   locator.registerSingleton<UserService>(service);
 
@@ -141,6 +157,28 @@ ToastService getAndRegisterToastService([String? message]) {
   when(() => service.showSnackBar(message ?? any<String>())).thenAnswer((_) async {});
 
   locator.registerSingleton<ToastService>(service);
+
+  return service;
+}
+
+ChatService getAndRegisterChatService() {
+  _removeRegistrationIfExists<ChatService>();
+
+  final ChatService service = MockChatService();
+
+  // method stubs
+
+  when(() => service.sendMessage(
+        any<User>(),
+        any<String>(),
+        collectionPath: any(named: "collectionPath"),
+        messageImageUrl: any(named: "messageImageUrl"),
+        messageImageFileName: any(named: "messageImageFileName"),
+      )).thenAnswer((_) async => Future.value);
+
+  when(() => service.deleteMessage(any(), any())).thenAnswer((_) async => Future.value);
+
+  locator.registerSingleton<ChatService>(service);
 
   return service;
 }
