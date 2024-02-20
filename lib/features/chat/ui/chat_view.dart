@@ -17,39 +17,37 @@ class ChatView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColor.chatBgColor,
-        appBar: AppBar(
-          foregroundColor: AppColor.primaryThemeColor,
-          scrolledUnderElevation: 0,
-          title: const Text('Chatte'),
-        ),
-        body: ChangeNotifierProvider(
-            create: (context) => ChatViewModel(),
-            builder: (context, _) {
-              // final model = Provider.of<ChatViewModel>(context);
-              return Stack(
-                children: [
-                  // if (model.isBusy) paddedIndicator,
-                  Column(
-                    children: <Widget>[
-                      Expanded(
-                        // Scrollable list of messages from authorized users
-                        child: Messages(
-                          user: currentUser,
-                        ),
-                      ),
-                      // Send message widget
-                      SendMessage(
+    return Scaffold(
+      backgroundColor: AppColor.chatBgColor,
+      appBar: AppBar(
+        foregroundColor: AppColor.primaryThemeColor,
+        scrolledUnderElevation: 0,
+        title: const Text('Chatte'),
+      ),
+      body: ChangeNotifierProvider(
+          create: (context) => ChatViewModel(),
+          builder: (context, _) {
+            // final model = Provider.of<ChatViewModel>(context);
+            return Stack(
+              children: [
+                // if (model.isBusy) paddedIndicator,
+                Column(
+                  children: <Widget>[
+                    Expanded(
+                      // Scrollable list of messages from authorized users
+                      child: Messages(
                         user: currentUser,
                       ),
-                    ],
-                  ),
-                ],
-              );
-            }),
-      ),
+                    ),
+                    // Send message widget
+                    SendMessage(
+                      user: currentUser,
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
     );
   }
 }
