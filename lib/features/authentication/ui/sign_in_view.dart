@@ -126,7 +126,7 @@ class SignInView extends StatelessWidget {
                                         children: [
                                           CustomSwitch(
                                             value: model.isRemeberMeSwitchedOn,
-                                            onChanged: model.setSwitchState,
+                                            onChanged: model.setRemember,
                                           ),
                                           const Text(
                                             'Remember Me',

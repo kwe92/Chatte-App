@@ -15,10 +15,13 @@ void main() {
         viewModel: SignInViewModel(),
       );
 
+      await tester.pumpAndSettle();
+
       final loginButton = find.text("Login");
 
       expect(loginButton, findsOneWidget);
     });
+
     testWidgets("when login button pressed and text fields are empty, error text received and navigation to ChatView doesn't happen",
         (tester) async {
       await pumpView<SignInViewModel>(
@@ -26,6 +29,8 @@ void main() {
         view: const SignInView(),
         viewModel: SignInViewModel(),
       );
+
+      await tester.pumpAndSettle();
 
       final loginButton = find.text("Login");
 

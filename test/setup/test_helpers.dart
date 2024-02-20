@@ -14,6 +14,7 @@ import 'package:chatapp/shared/services/string_service.dart';
 import 'package:chatapp/shared/services/toast_service.dart';
 import 'package:chatapp/shared/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ Future<void> registerSharedServices() async {
   getAndRegisterService<PasswordVisibilityController>(PasswordVisibilityController());
   getAndRegisterService<AppNavigator>(AppNavigator());
   getAndRegisterService<KeyService>(KeyService());
+  getAndRegisterFlutterSecureStorageService();
 }
 
 T getAndRegisterService<T extends Object>(
@@ -179,6 +181,22 @@ ChatService getAndRegisterChatService() {
   when(() => service.deleteMessage(any(), any())).thenAnswer((_) async => Future.value);
 
   locator.registerSingleton<ChatService>(service);
+
+  return service;
+}
+
+FlutterSecureStorage getAndRegisterFlutterSecureStorageService() {
+  _removeRegistrationIfExists<FlutterSecureStorage>();
+
+  final FlutterSecureStorage service = MockFlutterSecureStorage();
+
+  // stubs
+
+  when(() => service.containsKey(key: any<String>(named: "key"))).thenAnswer((_) => Future.value(false));
+
+  when(() => service.write(key: any<String>(named: "key"), value: any<String>(named: "value"))).thenAnswer((_) async => Future.value());
+
+  locator.registerSingleton<FlutterSecureStorage>(service);
 
   return service;
 }
