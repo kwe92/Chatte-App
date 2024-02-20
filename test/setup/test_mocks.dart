@@ -7,6 +7,7 @@ import 'package:chatapp/shared/services/toast_service.dart';
 import 'package:chatapp/shared/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -27,6 +28,8 @@ class MockToastService extends Mock implements ToastService {}
 class MockCollectionReference<T> extends Mock implements CollectionReference {}
 
 class MockChatService extends Mock implements ChatService {}
+
+class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
 class MockFirebaseUser extends Mock implements User {
   @override

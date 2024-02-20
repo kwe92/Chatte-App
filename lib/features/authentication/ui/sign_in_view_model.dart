@@ -58,7 +58,7 @@ class SignInViewModel extends ExtendedChangeNotifier {
     // }
   }
 
-  void setSwitchState(bool isSwitchedOn) async {
+  void setRemember(bool isSwitchedOn) async {
     _isRemeberMeSwitchedOn = isSwitchedOn;
 
     await saveToStorage(

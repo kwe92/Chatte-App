@@ -11,6 +11,8 @@ void main() {
   group("SignInViewModel", () {
     SignInViewModel getModel() => SignInViewModel();
 
+    setUpAll(() async => await registerSharedServices());
+
     test("when set state methods called, states are changed", () {
       // Arrange = Setup
 
@@ -28,7 +30,7 @@ void main() {
 
       model.setPassword(password);
 
-      model.setSwitchState(isSwitchedOn);
+      model.setRemember(isSwitchedOn);
 
       // Assert - Result
 
