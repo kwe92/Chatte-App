@@ -9,6 +9,7 @@ import 'package:chatapp/shared/services/key_service.dart';
 import 'package:chatapp/shared/services/string_service.dart';
 import 'package:chatapp/shared/services/toast_service.dart';
 import 'package:chatapp/shared/services/user_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // TODO: create an abstract base class for Services | start with app router
 
@@ -23,3 +24,4 @@ ImagePickerService get imagePickerService => locator.get<ImagePickerService>();
 KeyService get keyService => locator.get<KeyService>();
 
 PasswordVisibilityController get passwordVisibilityController => locator.get<PasswordVisibilityController>();
+FlutterSecureStorage get storage => locator.get<FlutterSecureStorage>();
