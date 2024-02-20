@@ -1,4 +1,5 @@
 import 'package:chatapp/shared/services/services.dart';
+import 'package:chatapp/shared/utils/classes/popup_menu_parameters.dart';
 import 'package:flutter/material.dart';
 
 class ToastService {
@@ -11,6 +12,22 @@ class ToastService {
         : ScaffoldMessenger.of(context).showSnackBar(
             snackBar,
           );
+  }
+
+  // TODO: implement popupMenu
+
+  Future<T> pupupMenu<T>(
+    BuildContext context, {
+    required PopupMenuParameters popupMenuParameters,
+  }) async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(popupMenuParameters.title),
+        );
+      },
+    );
   }
 }
 
