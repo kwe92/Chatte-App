@@ -36,7 +36,7 @@ void main() {
 
       expect(model.password, password);
 
-      expect(model.switchState, isSwitchedOn);
+      expect(model.isRemeberMeSwitchedOn, isSwitchedOn);
     });
 
     test('when clearData called, then all data cleared', () {
