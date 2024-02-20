@@ -47,6 +47,8 @@ dependencies:
   flutter_svg: ^2.0.9
   image_picker_platform_interface: ^2.9.3
   mocktail: ^1.0.3
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
